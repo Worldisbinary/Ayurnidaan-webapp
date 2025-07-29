@@ -10,7 +10,6 @@ import {
   SidebarMenuButton,
   SidebarMenuSub,
   SidebarMenuSubButton,
-  SidebarMenuSubContent,
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarInset,
@@ -34,7 +33,7 @@ import {
   BookText, 
   History, 
   Gem,
-  Bot,
+  PlusCircle,
   Pill
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -63,13 +62,13 @@ export default function DashboardLayout({
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
-              <SidebarMenuItem>
+               <SidebarMenuItem>
                  <SidebarMenuButton 
-                    tooltip="AI Diagnosis" 
+                    tooltip="New Patient" 
                     onClick={() => router.push('/dashboard/new-patient')}
                   >
-                   <Bot />
-                   <span className="font-bold text-base">AI Diagnosis</span>
+                   <PlusCircle />
+                   <span className="font-bold text-base">New Patient</span>
                  </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
