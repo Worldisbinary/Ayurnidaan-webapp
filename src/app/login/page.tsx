@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Leaf, User, Key, Phone, LogIn } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
@@ -28,11 +27,7 @@ export default function LoginPage() {
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
 
-  // We will initialize confirmationResult to null and only set it when OTP is sent
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
-
   const setupRecaptcha = () => {
-    // Only initialize if it hasn't been already
     if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
             'size': 'invisible',
@@ -52,8 +47,8 @@ export default function LoginPage() {
     try {
         const appVerifier = setupRecaptcha();
         const formattedPhone = `+91${phone}`;
-        const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-        setConfirmationResult(result);
+        const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
+        window.confirmationResult = confirmationResult; // Store it on the window object
         setOtpSent(true);
         toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
     } catch (error: any) {
@@ -63,7 +58,7 @@ export default function LoginPage() {
   };
 
   const handleVerifyOtp = async () => {
-    if (!confirmationResult) {
+    if (!window.confirmationResult) {
         toast({ title: "Error", description: "Confirmation result not found. Please try sending OTP again.", variant: "destructive" });
         return;
     }
@@ -72,7 +67,7 @@ export default function LoginPage() {
         return;
     }
     try {
-        await confirmationResult.confirm(otp);
+        await window.confirmationResult.confirm(otp);
         toast({ title: "Success", description: "You have been successfully logged in." });
         router.push('/dashboard');
     } catch (error: any) {
