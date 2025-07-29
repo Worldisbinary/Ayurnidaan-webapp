@@ -6,7 +6,11 @@ import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { DiagnosisResults } from '@/components/diagnosis-results';
-import { ChevronLeft, User, ClipboardList } from 'lucide-react';
+import { ChevronLeft, User, ClipboardList, Bot, Loader2 } from 'lucide-react';
+import { getDiagnosis } from '@/app/actions';
+import type { SuggestDiagnosesInput, SuggestDiagnosesOutput } from '@/ai/flows/suggest-diagnoses';
+import { useToast } from "@/hooks/use-toast";
+
 
 // Define a comprehensive patient type
 interface Patient {
@@ -33,15 +37,18 @@ interface Patient {
   prameha: string;
   grahani: string;
   shotha: string;
-  diagnosis: any; // Can be more specific if the diagnosis structure is known
+  diagnosis: SuggestDiagnosesOutput | null;
 }
 
 export default function PatientDetailPage() {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDiagnosing, setIsDiagnosing] = useState(false);
+  const [diagnosisResult, setDiagnosisResult] = useState<SuggestDiagnosesOutput | null>(null);
   const router = useRouter();
   const params = useParams();
   const { id } = params;
+  const { toast } = useToast();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && id) {
@@ -52,15 +59,66 @@ export default function PatientDetailPage() {
           const currentPatient = patients.find((p: Patient) => p.id === id);
           if (currentPatient) {
             setPatient(currentPatient);
+            setDiagnosisResult(currentPatient.diagnosis);
           }
         }
       } catch (error) {
         console.error("Failed to retrieve patient data", error);
+        toast({
+            title: "Error",
+            description: "Failed to retrieve patient data from local storage.",
+            variant: "destructive",
+        });
       } finally {
         setIsLoading(false);
       }
     }
-  }, [id]);
+  }, [id, toast]);
+  
+  const handleGetDiagnosis = async () => {
+    if (!patient) return;
+
+    setIsDiagnosing(true);
+    
+    const patientDetails = `Name: ${patient.name}, Age: ${patient.age}, Gender: ${patient.gender}, Weight: ${patient.weight}, Height: ${patient.height}, Diet: ${patient.diet}, Visit Date: ${new Date(patient.visitDate).toISOString().split('T')[0]}, Location: ${patient.location}`;
+    
+    const symptoms = `Stool (मल): ${patient.mal}, Urine (मूत्र): ${patient.mutra}, Appetite (क्षुधा): ${patient.kshudha}, Thirst (तृष्णा): ${patient.trishna}, Sleep (निद्रा): ${patient.nidra}, Tongue (जिह्वा): ${patient.jivha}, Mental State (मनो स्वभाव): ${patient.manoSwabhav}, Other Complaints: ${patient.otherComplaints}, Arsh (अर्श): ${patient.arsh}, Ashmari (अश्मरी): ${patient.ashmari}, Kushtha (कुष्ठ): ${patient.kushtha}, Prameha (प्रमेह): ${patient.prameha}, Grahani (ग्रहणी): ${patient.grahani}, Shotha (शोथ): ${patient.shotha}`;
+
+    const actionInput: SuggestDiagnosesInput = {
+      patientDetails,
+      symptoms,
+    };
+
+    try {
+      const result = await getDiagnosis(actionInput);
+      setDiagnosisResult(result);
+      
+      // Update patient in localStorage
+      const storedPatients = JSON.parse(localStorage.getItem('patients') || '[]');
+      const updatedPatients = storedPatients.map((p: Patient) => 
+        p.id === id ? { ...p, diagnosis: result } : p
+      );
+      localStorage.setItem('patients', JSON.stringify(updatedPatients));
+
+      // Also update the state for the current page
+      setPatient(prevPatient => prevPatient ? { ...prevPatient, diagnosis: result } : null);
+
+      toast({
+        title: "Diagnosis Complete",
+        description: "The AI analysis has been updated.",
+      });
+
+    } catch (error) {
+        toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive",
+        });
+    } finally {
+        setIsDiagnosing(false);
+    }
+  };
+
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-full">Loading patient details...</div>;
@@ -74,7 +132,7 @@ export default function PatientDetailPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Patient Details</h2>
-        <Button variant="outline" onClick={() => router.back()}>
+        <Button variant="outline" onClick={() => router.push('/dashboard/patient-history')}>
           <ChevronLeft className="mr-2 h-4 w-4" />
           Back to Patient List
         </Button>
@@ -124,8 +182,29 @@ export default function PatientDetailPage() {
           </Card>
         </div>
 
-        <div className="lg:col-span-2">
-            <DiagnosisResults result={patient.diagnosis} isLoading={false} />
+        <div className="lg:col-span-2 space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>AI Diagnosis</CardTitle>
+                    <CardDescription>Generate or view the AI-assisted diagnosis for this patient.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button onClick={handleGetDiagnosis} disabled={isDiagnosing}>
+                        {isDiagnosing ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Analyzing...
+                            </>
+                        ) : (
+                            <>
+                                <Bot className="mr-2 h-4 w-4" />
+                                Get AI Diagnosis
+                            </>
+                        )}
+                    </Button>
+                </CardContent>
+            </Card>
+            <DiagnosisResults result={diagnosisResult} isLoading={isDiagnosing} />
         </div>
       </div>
     </div>
