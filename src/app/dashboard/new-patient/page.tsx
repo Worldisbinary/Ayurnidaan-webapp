@@ -17,13 +17,14 @@ export default function NewPatientPage() {
     setIsLoading(true);
     setResult(null);
 
-    const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}, Lifestyle: ${data.lifestyle}`;
+    const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}`;
+    
+    const symptoms = `Stool (Mal): ${data.mal}, Urine (Mutra): ${data.mutra}, Appetite (Kshudha): ${data.kshudha}, Thirst (Trishna): ${data.trishna}, Sleep (Nidra): ${data.nidra}, Tongue (Jivha): ${data.jivha}, Mental State (Mano Swabhav): ${data.manoSwabhav}, Other Complaints: ${data.otherComplaints}`;
+
 
     const actionInput: SuggestDiagnosesInput = {
       patientDetails,
-      medicalHistory: data.medicalHistory,
-      symptoms: data.symptoms,
-      physicalObservations: data.physicalObservations,
+      symptoms,
     };
 
     try {

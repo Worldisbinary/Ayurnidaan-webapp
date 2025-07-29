@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { SuggestDiagnosesInput } from "@/ai/flows/suggest-diagnoses";
@@ -36,10 +36,14 @@ const diagnosisSchema = z.object({
     required_error: "A date of visit is required.",
   }),
   location: z.string().min(1, 'Location is required.'),
-  lifestyle: z.string().min(1, 'Lifestyle details are required.'),
-  medicalHistory: z.string().min(10, 'Medical history is required (min. 10 characters).'),
-  symptoms: z.string().min(10, 'Please provide detailed symptoms (min. 10 characters).'),
-  physicalObservations: z.string().min(10, 'Please provide detailed observations (min. 10 characters).'),
+  mal: z.string().min(1, "This field is required."),
+  mutra: z.string().min(1, "This field is required."),
+  kshudha: z.string().min(1, "This field is required."),
+  trishna: z.string().min(1, "This field is required."),
+  nidra: z.string().min(1, "This field is required."),
+  jivha: z.string().min(1, "This field is required."),
+  manoSwabhav: z.string().min(1, "This field is required."),
+  otherComplaints: z.string().optional(),
 });
 
 export type DiagnosisFormValues = z.infer<typeof diagnosisSchema>;
@@ -61,10 +65,14 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
       diet: "vegetarian",
       visitDate: new Date(),
       location: "",
-      lifestyle: "",
-      medicalHistory: "",
-      symptoms: "",
-      physicalObservations: "",
+      mal: "",
+      mutra: "",
+      kshudha: "",
+      trishna: "",
+      nidra: "",
+      jivha: "",
+      manoSwabhav: "",
+      otherComplaints: "",
     },
   });
 
@@ -241,60 +249,122 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="lifestyle"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Lifestyle</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Describe diet, exercise, stress levels, etc." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </CardContent>
             </Card>
-            <FormField
-              control={form.control}
-              name="medicalHistory"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xl font-headline">Medical History</FormLabel>
-                  <FormControl>
-                    <Textarea rows={4} placeholder="Previous illnesses, treatments, allergies..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="symptoms"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xl font-headline">Symptom Record</FormLabel>
-                  <FormControl>
-                    <Textarea rows={6} placeholder="Digestive, respiratory, skin, mental state..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="physicalObservations"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xl font-headline">Physical Observations</FormLabel>
-                  <FormControl>
-                    <Textarea rows={4} placeholder="Describe tongue, nails, skin, eyes..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            <Card className="bg-background/80">
+                <CardHeader>
+                    <CardTitle className="text-xl font-headline">Symptom Details</CardTitle>
+                    <CardDescription>Provide details based on Ayurvedic parameters.</CardDescription>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                    control={form.control}
+                    name="mal"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Stool (Mal)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Vibandh (Constipation), Normal" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                     <FormField
+                    control={form.control}
+                    name="mutra"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Urine (Mutra)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Dah Yukt (Burning), Normal" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                     <FormField
+                    control={form.control}
+                    name="kshudha"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Appetite (Kshudha)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Decreased, Increased, Normal" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                     <FormField
+                    control={form.control}
+                    name="trishna"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Thirst (Trishna)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Decreased, Increased, Normal" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                     <FormField
+                    control={form.control}
+                    name="nidra"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Sleep (Nidra)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Khandit (Disturbed), Normal" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                     <FormField
+                    control={form.control}
+                    name="jivha"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Tongue (Jivha)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Saam (Coated), Niram (Clear)" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                     <FormField
+                    control={form.control}
+                    name="manoSwabhav"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Mental State (Mano Swabhav)</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Chidchida (Irritable), Calm" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                     <FormField
+                    control={form.control}
+                    name="otherComplaints"
+                    render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                        <FormLabel>Other Complaints</FormLabel>
+                        <FormControl>
+                            <Textarea placeholder="Describe any other issues..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                </CardContent>
+            </Card>
+
             <Button type="submit" disabled={isLoading} className="w-full text-lg py-6">
               {isLoading ? (
                 <>

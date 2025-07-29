@@ -17,19 +17,9 @@ const SuggestDiagnosesInputSchema = z.object({
   patientDetails: z
     .string()
     .describe('Patient details including age, gender, location, and lifestyle.'),
-  medicalHistory: z
-    .string()
-    .describe(
-      'Patient medical history, including previous illnesses, treatments, and known allergies.'
-    ),
   symptoms: z
     .string()
-    .describe('A comprehensive record of symptoms across different systems.'),
-  physicalObservations: z
-    .string()
-    .describe(
-      'Image-based assessment for tongue, nails, and skin analysis. As a text description.'
-    ),
+    .describe('A comprehensive record of symptoms including stool, urine, appetite, thirst, sleep, tongue, and mental state.'),
 });
 export type SuggestDiagnosesInput = z.infer<typeof SuggestDiagnosesInputSchema>;
 
@@ -61,9 +51,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert Ayurvedic practitioner. Analyze the patient data provided below and suggest potential Dosha imbalances and possible diseases. Provide a reasoning for your diagnosis.
 
 Patient Details: {{{patientDetails}}}
-Medical History: {{{medicalHistory}}}
 Symptoms: {{{symptoms}}}
-Physical Observations: {{{physicalObservations}}}
 
 Consider all information to prioritize likely diagnoses.`,
 });
