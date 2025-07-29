@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2, Save } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { SuggestDiagnosesInput } from "@/ai/flows/suggest-diagnoses";
 
 const diagnosisSchema = z.object({
   name: z.string().min(1, 'Name is required.'),
@@ -56,10 +55,12 @@ export type DiagnosisFormValues = z.infer<typeof diagnosisSchema>;
 
 interface DiagnosisFormProps {
   onDiagnose: (data: DiagnosisFormValues) => Promise<void>;
+  onSave: () => void;
   isLoading: boolean;
+  isDiagnosisComplete: boolean;
 }
 
-export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
+export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComplete }: DiagnosisFormProps) {
   const form = useForm<DiagnosisFormValues>({
     resolver: zodResolver(diagnosisSchema),
     defaultValues: {
@@ -546,14 +547,26 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                 </CardContent>
             </Card>
 
-            <Button type="submit" disabled={isLoading} className="w-full text-lg py-6">
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                  Analyzing...
-                </>
-              ) : "Get Diagnosis"}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4">
+                <Button type="submit" disabled={isLoading} className="w-full text-lg py-6">
+                {isLoading ? (
+                    <>
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                    Analyzing...
+                    </>
+                ) : "Get Diagnosis"}
+                </Button>
+                <Button 
+                    type="button" 
+                    variant="secondary" 
+                    onClick={onSave} 
+                    disabled={isLoading || !isDiagnosisComplete} 
+                    className="w-full text-lg py-6"
+                >
+                    <Save className="mr-2 h-6 w-6" />
+                    Save Patient
+                </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
