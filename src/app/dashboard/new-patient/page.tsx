@@ -10,16 +10,22 @@ import { DiagnosisForm, type DiagnosisFormValues } from '@/components/diagnosis-
 import { DiagnosisResults } from '@/components/diagnosis-results';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
+
 
 export default function NewPatientPage() {
   const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDiagnosisComplete, setIsDiagnosisComplete] = useState(false);
+  const [currentFormData, setCurrentFormData] = useState<DiagnosisFormValues | null>(null);
   const { toast } = useToast();
   const router = useRouter();
 
   const handleDiagnosis = async (data: DiagnosisFormValues) => {
     setIsLoading(true);
     setResult(null);
+    setIsDiagnosisComplete(false);
+    setCurrentFormData(data);
 
     const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}`;
     
@@ -33,6 +39,11 @@ export default function NewPatientPage() {
     try {
       const diagnosisResult = await getDiagnosis(actionInput);
       setResult(diagnosisResult);
+      setIsDiagnosisComplete(true);
+      toast({
+        title: "Diagnosis Complete",
+        description: "The AI analysis is complete. You can now save the patient.",
+      });
     } catch (error) {
       toast({
         title: "Error",
@@ -43,6 +54,47 @@ export default function NewPatientPage() {
       setIsLoading(false);
     }
   };
+
+  const handleSavePatient = () => {
+    if (!result || !currentFormData) {
+        toast({
+            title: "Cannot Save Patient",
+            description: "A diagnosis must be completed before saving the patient.",
+            variant: "destructive",
+        });
+        return;
+    }
+
+    const newPatient = {
+      id: uuidv4(),
+      name: currentFormData.name,
+      lastVisit: currentFormData.visitDate.toISOString().split('T')[0],
+      dosha: result.potentialImbalances,
+      ...currentFormData,
+      diagnosis: result,
+    };
+
+    try {
+        const existingPatients = JSON.parse(localStorage.getItem('patients') || '[]');
+        const updatedPatients = [...existingPatients, newPatient];
+        localStorage.setItem('patients', JSON.stringify(updatedPatients));
+        
+        toast({
+            title: "Patient Saved",
+            description: `${currentFormData.name} has been added to the patient history.`,
+        });
+        
+        router.push('/dashboard/patient-history');
+
+    } catch (error) {
+        toast({
+            title: "Error Saving Patient",
+            description: "Could not save patient data to local storage.",
+            variant: "destructive",
+        });
+    }
+  };
+
 
   return (
     <div className="space-y-4">
@@ -56,7 +108,9 @@ export default function NewPatientPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 gap-8 mt-6">
             <DiagnosisForm 
                 onDiagnose={handleDiagnosis} 
+                onSave={handleSavePatient}
                 isLoading={isLoading} 
+                isDiagnosisComplete={isDiagnosisComplete}
             />
             <div className="space-y-8">
                 <DiagnosisResults result={result} isLoading={isLoading} />
