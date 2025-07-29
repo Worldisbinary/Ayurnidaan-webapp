@@ -30,70 +30,74 @@ export default function PremiumPage() {
         Unlock advanced diagnostic tools, in-depth analysis, and priority support, exclusively for students.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-        <Card className="shadow-lg border-2 border-primary/30 transform hover:scale-105 transition-transform duration-300">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-headline">Monthly Plan</CardTitle>
-            <CardDescription>Perfect for getting started</CardDescription>
-            <div className="text-4xl font-bold my-4">
-              ₹3000<span className="text-base font-normal text-muted-foreground">/month</span>
+      <div className="grid grid-cols-2 gap-4 mt-8">
+        <Card className="shadow-lg border-2 border-primary/30 flex flex-col">
+          <CardHeader className="text-center p-4">
+            <CardTitle className="text-lg font-headline">Monthly Plan</CardTitle>
+            <CardDescription className="text-xs">Perfect for getting started</CardDescription>
+            <div className="text-2xl font-bold my-2">
+              ₹3000<span className="text-xs font-normal text-muted-foreground">/mo</span>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <ul className="space-y-2 text-muted-foreground">
+          <CardContent className="p-4 space-y-2 flex-grow">
+            <ul className="space-y-1 text-xs text-muted-foreground">
               <li className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span>Unlimited Patient Diagnoses</span>
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>Unlimited Diagnoses</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <CheckCircle className="w-4 h-4 text-green-500" />
                 <span>Advanced Reporting</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <CheckCircle className="w-4 h-4 text-green-500" />
                 <span>Email Support</span>
               </li>
             </ul>
-            <Button className="w-full text-lg py-6 mt-4" onClick={() => handleChoosePlan('monthly')}>Choose Monthly</Button>
           </CardContent>
+          <div className="p-4 mt-auto">
+            <Button className="w-full text-sm py-2" onClick={() => handleChoosePlan('monthly')}>Choose Monthly</Button>
+          </div>
         </Card>
         
-        <Card className="shadow-lg border-2 border-primary transform hover:scale-105 transition-transform duration-300 relative">
-            <div className="absolute -top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-bold">
+        <Card className="shadow-lg border-2 border-primary relative flex flex-col">
+            <div className="absolute -top-3 right-2 bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-xs font-bold">
                 Best Value
             </div>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-headline">Yearly Plan</CardTitle>
-            <CardDescription>Save big with our annual plan</CardDescription>
-             <div className="text-4xl font-bold my-4">
-              ₹28000<span className="text-base font-normal text-muted-foreground">/year</span>
+          <CardHeader className="text-center p-4">
+            <CardTitle className="text-lg font-headline">Yearly Plan</CardTitle>
+            <CardDescription className="text-xs">Save with annual plan</CardDescription>
+             <div className="text-2xl font-bold my-2">
+              ₹28000<span className="text-xs font-normal text-muted-foreground">/yr</span>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <ul className="space-y-2 text-muted-foreground">
+          <CardContent className="p-4 space-y-2 flex-grow">
+            <ul className="space-y-1 text-xs text-muted-foreground">
                <li className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span>Unlimited Patient Diagnoses</span>
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>Unlimited Diagnoses</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <CheckCircle className="w-4 h-4 text-green-500" />
                 <span>Advanced Reporting</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span>Priority Phone & Email Support</span>
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>Priority Support</span>
               </li>
                <li className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-                <span>Access to Beta Features</span>
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>Beta Features</span>
               </li>
             </ul>
-            <Button className="w-full text-lg py-6 mt-4" onClick={() => handleChoosePlan('yearly')}>Choose Yearly</Button>
           </CardContent>
+           <div className="p-4 mt-auto">
+            <Button className="w-full text-sm py-2" onClick={() => handleChoosePlan('yearly')}>Choose Yearly</Button>
+          </div>
         </Card>
       </div>
 
-       <div className="text-center text-muted-foreground text-sm mt-8">
+       <div className="text-center text-muted-foreground text-xs mt-8">
             <p>You can change your plan or cancel your subscription at any time.</p>
             <p>Payments are processed securely. By upgrading, you agree to our Terms of Service.</p>
         </div>
