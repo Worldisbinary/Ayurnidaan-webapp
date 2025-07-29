@@ -43,21 +43,21 @@ export default function DashboardLayout({
   const getLinkClass = (path: string) => {
     // On the server or before hydration, return a default class
     if (!isClient) {
-      return 'text-muted-foreground px-3 py-1';
+      return 'text-primary-foreground/70 hover:text-primary-foreground px-3 py-1';
     }
     // On the client, determine the class based on the current path
     const isActive = pathname === path;
     return isActive
-      ? 'bg-primary/10 text-primary rounded-full px-3 py-1' 
-      : 'text-muted-foreground px-3 py-1';
+      ? 'bg-primary-foreground/10 text-primary-foreground rounded-full px-3 py-1' 
+      : 'text-primary-foreground/70 hover:text-primary-foreground px-3 py-1';
   };
 
   const getDropdownClass = () => {
      if (!isClient) {
-      return 'text-muted-foreground';
+      return 'text-primary-foreground/70 hover:text-primary-foreground';
     }
     const isActive = pathname.startsWith('/dashboard/texts');
-    return isActive ? 'text-foreground' : 'text-muted-foreground';
+    return isActive ? 'text-primary-foreground' : 'text-primary-foreground/70 hover:text-primary-foreground';
   }
 
   const navLinks = [
@@ -76,27 +76,27 @@ export default function DashboardLayout({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b border-primary-foreground/20 bg-primary text-primary-foreground px-4 md:px-6 z-50">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 md:flex-nowrap">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-lg font-semibold md:text-base"
+            className="flex items-center gap-2 text-lg font-semibold md:text-base text-primary-foreground"
           >
-            <Leaf className="h-6 w-6 text-primary" />
+            <Leaf className="h-6 w-6" />
             <span className="sr-only">Ayurnidaan</span>
           </Link>
           {navLinks.map((link) => (
              <Link
               key={link.href}
               href={link.href}
-              className={`transition-colors hover:text-foreground whitespace-nowrap ${getLinkClass(link.href)}`}
+              className={`transition-colors whitespace-nowrap ${getLinkClass(link.href)}`}
             >
               {link.label}
             </Link>
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-               <Button variant="link" className={`transition-colors hover:text-foreground p-0 h-auto whitespace-nowrap ${getDropdownClass()}`}>
+               <Button variant="link" className={`transition-colors p-0 h-auto whitespace-nowrap ${getDropdownClass()}`}>
                 Ayurvedic Texts
               </Button>
             </DropdownMenuTrigger>
@@ -118,7 +118,7 @@ export default function DashboardLayout({
             <Button
               variant="outline"
               size="icon"
-              className="shrink-0 md:hidden"
+              className="shrink-0 md:hidden bg-primary text-primary-foreground hover:bg-primary-foreground/10"
             >
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle navigation menu</span>
@@ -137,7 +137,7 @@ export default function DashboardLayout({
                 <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-4 transition-colors hover:text-foreground ${getLinkClass(link.href)}`}
+                    className={`flex items-center gap-4 transition-colors hover:text-foreground ${getLinkClass(link.href).replace('text-primary-foreground/70', 'text-muted-foreground').replace('text-primary-foreground', 'text-foreground')}`}
                 >
                     {link.icon}
                     {link.label}
@@ -167,7 +167,7 @@ export default function DashboardLayout({
         </Sheet>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <div className="ml-auto flex-1 sm:flex-initial">
-             <Button variant="outline" onClick={() => router.push('/dashboard/premium')}>
+             <Button variant="outline" className="bg-primary text-primary-foreground hover:bg-primary-foreground/10" onClick={() => router.push('/dashboard/premium')}>
                    <Gem className="mr-2 h-4 w-4" />
                    Premium
             </Button>
