@@ -26,29 +26,33 @@ const FetchArticlesOutputSchema = z.object({
 export type FetchArticlesOutput = z.infer<typeof FetchArticlesOutputSchema>;
 
 export async function fetchArticles(): Promise<FetchArticlesOutput> {
-  return fetchArticlesFlow();
+  // We are returning a static list of articles to avoid requiring an API key for now.
+  return {
+    articles: [
+      {
+        title: "The Power of Turmeric: More Than Just a Spice",
+        description: "Discover the anti-inflammatory and antioxidant benefits of this golden spice and how to incorporate it into your daily routine for optimal health.",
+        source: "AyurvedaToday.com",
+        imageHint: "turmeric spice"
+      },
+      {
+        title: "Yoga for Digestion: 5 Poses to Soothe Your Gut",
+        description: "Explore gentle yoga postures that can aid digestion, reduce bloating, and improve your overall gut health. Suitable for all levels.",
+        source: "Wellbeing Journal",
+        imageHint: "yoga pose"
+      },
+      {
+        title: "Understanding Your Dosha: A Beginner's Guide",
+        description: "An introduction to the three doshas—Vata, Pitta, and Kapha—and how understanding your unique constitution can lead to a more balanced life.",
+        source: "The Ayurvedic Path",
+        imageHint: "meditation nature"
+      },
+      {
+        title: "Ashwagandha: The Stress-Busting Adaptogen",
+        description: "Learn about the science behind Ashwagandha, an ancient herb known for its ability to reduce stress, improve energy, and enhance focus.",
+        source: "Herbal Wisdom Magazine",
+        imageHint: "herbal remedy"
+      }
+    ]
+  };
 }
-
-const prompt = ai.definePrompt({
-  name: 'fetchArticlesPrompt',
-  output: { schema: FetchArticlesOutputSchema },
-  prompt: `You are an expert content curator for an Ayurvedic health platform. 
-  
-  Your task is to generate a list of 4 recent, interesting, and diverse news articles or blog posts related to Ayurveda. 
-  
-  For each article, provide a compelling title, a brief description, the source, and a hint for a placeholder image.
-  
-  Ensure the topics are varied, covering areas like modern research, lifestyle tips, herbal remedies, and dietary advice.`,
-});
-
-
-const fetchArticlesFlow = ai.defineFlow(
-  {
-    name: 'fetchArticlesFlow',
-    outputSchema: FetchArticlesOutputSchema,
-  },
-  async () => {
-    const { output } = await prompt();
-    return output!;
-  }
-);
