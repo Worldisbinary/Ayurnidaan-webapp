@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { SuggestDiagnosesOutput } from "@/ai/flows/suggest-diagnoses";
 
 const diagnosisSchema = z.object({
   name: z.string().min(1, 'Name is required.'),
@@ -57,10 +58,10 @@ interface DiagnosisFormProps {
   onDiagnose: (data: DiagnosisFormValues) => Promise<void>;
   onSave: () => void;
   isLoading: boolean;
-  isDiagnosisComplete: boolean;
+  result: SuggestDiagnosesOutput | null;
 }
 
-export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComplete }: DiagnosisFormProps) {
+export function DiagnosisForm({ onDiagnose, onSave, isLoading, result }: DiagnosisFormProps) {
   const form = useForm<DiagnosisFormValues>({
     resolver: zodResolver(diagnosisSchema),
     defaultValues: {
@@ -560,7 +561,7 @@ export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComple
                     type="button" 
                     variant="secondary" 
                     onClick={onSave} 
-                    disabled={isLoading || !isDiagnosisComplete} 
+                    disabled={isLoading || !result} 
                     className="w-full text-lg py-6"
                 >
                     <Save className="mr-2 h-6 w-6" />

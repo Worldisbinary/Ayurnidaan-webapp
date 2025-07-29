@@ -16,14 +16,12 @@ export default function NewPatientPage() {
   const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
   const [formData, setFormData] = useState<DiagnosisFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDiagnosisComplete, setIsDiagnosisComplete] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
   const handleDiagnosis = async (data: DiagnosisFormValues) => {
     setIsLoading(true);
     setResult(null);
-    setIsDiagnosisComplete(false);
     setFormData(data); 
 
     const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}`;
@@ -38,14 +36,12 @@ export default function NewPatientPage() {
     try {
       const diagnosisResult = await getDiagnosis(actionInput);
       setResult(diagnosisResult);
-      setIsDiagnosisComplete(true);
     } catch (error) {
       toast({
         title: "Error",
         description: (error as Error).message,
         variant: "destructive",
       });
-      setIsDiagnosisComplete(false);
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +89,7 @@ export default function NewPatientPage() {
                 onDiagnose={handleDiagnosis} 
                 onSave={handleSavePatient}
                 isLoading={isLoading} 
-                isDiagnosisComplete={isDiagnosisComplete}
+                result={result}
             />
             <div className="space-y-8">
                 <DiagnosisResults result={result} isLoading={isLoading} />
