@@ -18,6 +18,7 @@ interface Patient {
 
 export default function PatientHistoryPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,10 +26,26 @@ export default function PatientHistoryPage() {
     if (typeof window !== 'undefined') {
       const storedPatients = localStorage.getItem('patients');
       if (storedPatients) {
-        setPatients(JSON.parse(storedPatients));
+        const parsedPatients = JSON.parse(storedPatients);
+        setPatients(parsedPatients);
+        setFilteredPatients(parsedPatients);
       }
     }
   }, []);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value.toLowerCase();
+    if (searchTerm) {
+      const filtered = patients.filter(
+        (patient) =>
+          patient.name.toLowerCase().includes(searchTerm) ||
+          patient.id.toLowerCase().includes(searchTerm)
+      );
+      setFilteredPatients(filtered);
+    } else {
+      setFilteredPatients(patients);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -49,7 +66,7 @@ export default function PatientHistoryPage() {
         <CardContent>
             <div className="mb-4 relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search by name or ID..." className="pl-8" />
+                <Input placeholder="Search by name or ID..." className="pl-8" onChange={handleSearch} />
             </div>
           <Table>
             <TableHeader>
@@ -62,8 +79,8 @@ export default function PatientHistoryPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {patients.length > 0 ? (
-                patients.map((patient) => (
+              {filteredPatients.length > 0 ? (
+                filteredPatients.map((patient) => (
                   <TableRow key={patient.id}>
                     <TableCell>{patient.id}</TableCell>
                     <TableCell className="font-medium">{patient.name}</TableCell>
