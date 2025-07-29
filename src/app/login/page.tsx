@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,8 +26,10 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const [otpSent, setOtpSent] = useState(false);
+
+  // We will initialize confirmationResult to null and only set it when OTP is sent
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   const setupRecaptcha = () => {
     // Only initialize if it hasn't been already
@@ -35,7 +37,7 @@ export default function LoginPage() {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
             'size': 'invisible',
             'callback': (response: any) => {
-              // reCAPTCHA solved.
+              // reCAPTCHA solved, allow signInWithPhoneNumber.
             }
         });
     }
