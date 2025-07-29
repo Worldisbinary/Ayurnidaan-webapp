@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { SuggestDiagnosesOutput } from '@/ai/flows/suggest-diagnoses';
@@ -48,10 +49,10 @@ export function DiagnosisResults({ result, isLoading }: DiagnosisResultsProps) {
 
   if (!result) {
     return (
-      <Card className="h-full flex flex-col items-center justify-center text-center p-8 bg-accent/20 border-dashed">
+      <Card className="h-full flex flex-col items-center justify-center text-center p-8 bg-accent/20 border-2 border-dashed border-accent">
         <Bot className="w-16 h-16 text-muted-foreground mb-4" />
         <h3 className="text-xl font-headline text-muted-foreground">Diagnostic Insights</h3>
-        <p className="text-muted-foreground">Fill out the patient form to receive AI-powered analysis.</p>
+        <p className="text-muted-foreground">Fill out the patient form and click "Get AI Diagnosis" to see the analysis here.</p>
       </Card>
     );
   }
