@@ -75,11 +75,59 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField control={form.control} name="age" render={({ field }) => ( <FormItem> <FormLabel>Age</FormLabel> <FormControl> <Input placeholder="e.g., 35" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                  <FormField control={form.control} name="gender" render={({ field }) => ( <FormItem> <FormLabel>Gender</FormLabel> <FormControl> <Input placeholder="e.g., Male, Female, Other" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                  <FormField
+                    control={form.control}
+                    name="age"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Age</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., 35" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="gender"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Gender</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Male, Female, Other" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-                <FormField control={form.control} name="location" render={({ field }) => ( <FormItem> <FormLabel>Location</FormLabel> <FormControl> <Input placeholder="e.g., City, Country" {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-                <FormField control={form.control} name="lifestyle" render={({ field }) => ( <FormItem> <FormLabel>Lifestyle</FormLabel> <FormControl> <Textarea placeholder="Describe diet, exercise, stress levels, etc." {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., City, Country" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lifestyle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Lifestyle</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Describe diet, exercise, stress levels, etc." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
             <FormField
