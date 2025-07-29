@@ -22,10 +22,10 @@ import {
   LogOut, 
   User, 
   BookText, 
-  PlusCircle, 
   History, 
   Gem,
-  Menu
+  Bot,
+  Pill
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -54,11 +54,11 @@ export default function DashboardLayout({
             <SidebarMenu>
               <SidebarMenuItem>
                  <SidebarMenuButton 
-                    tooltip="New Patient" 
+                    tooltip="AI Diagnosis" 
                     onClick={() => router.push('/dashboard/new-patient')}
                   >
-                   <PlusCircle />
-                   <span>New Patient</span>
+                   <Bot />
+                   <span>AI Diagnosis</span>
                  </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
@@ -69,6 +69,52 @@ export default function DashboardLayout({
                    <History />
                    <span>Patient History</span>
                  </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                 <SidebarMenuButton 
+                    tooltip="Medicines"
+                    onClick={() => { /* router.push('/dashboard/medicines') */ }}
+                  >
+                   <Pill />
+                   <span>Medicines</span>
+                 </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuSub>
+                  <SidebarMenuSubButton tooltip="Ayurvedic Texts">
+                    <BookText />
+                    <span>Ayurvedic Texts</span>
+                  </SidebarMenuSubButton>
+                  <SidebarMenuSubContent>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        onClick={() => {
+                          /* router.push('/dashboard/texts/charaka') */
+                        }}
+                      >
+                        Charaka Samhita
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        onClick={() => {
+                          /* router.push('/dashboard/texts/sushruta') */
+                        }}
+                      >
+                        Sushruta Samhita
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        onClick={() => {
+                          /* router.push('/dashboard/texts/ashtanga') */
+                        }}
+                      >
+                        Ashtanga Hridayam
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  </SidebarMenuSubContent>
+                </SidebarMenuSub>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>

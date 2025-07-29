@@ -33,7 +33,7 @@ export default function NewPatientPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">New Patient Diagnosis</h2>
+            <h2 className="text-3xl font-bold tracking-tight">AI Diagnosis</h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 gap-8 mt-6">
             <DiagnosisForm onDiagnose={handleDiagnosis} isLoading={isLoading} />
