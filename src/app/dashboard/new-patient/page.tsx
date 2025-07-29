@@ -16,20 +16,30 @@ import { v4 as uuidv4 } from 'uuid';
 export default function NewPatientPage() {
   const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDiagnosisComplete, setIsDiagnosisComplete] = useState(false);
   const [currentFormData, setCurrentFormData] = useState<DiagnosisFormValues | null>(null);
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleDiagnosis = async (data: DiagnosisFormValues) => {
+  const handleFormChange = (data: DiagnosisFormValues) => {
+    setCurrentFormData(data);
+  }
+
+  const handleDiagnosis = async () => {
+    if (!currentFormData) {
+       toast({
+        title: "Error",
+        description: "Please fill out the patient form before getting a diagnosis.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     setResult(null);
-    setIsDiagnosisComplete(false);
-    setCurrentFormData(data);
 
-    const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}`;
+    const patientDetails = `Name: ${currentFormData.name}, Age: ${currentFormData.age}, Gender: ${currentFormData.gender}, Weight: ${currentFormData.weight}, Height: ${currentFormData.height}, Diet: ${currentFormData.diet}, Visit Date: ${currentFormData.visitDate.toISOString().split('T')[0]}, Location: ${currentFormData.location}`;
     
-    const symptoms = `Stool (मल): ${data.mal}, Urine (मूत्र): ${data.mutra}, Appetite (क्षुधा): ${data.kshudha}, Thirst (तृष्णा): ${data.trishna}, Sleep (निद्रा): ${data.nidra}, Tongue (जिह्वा): ${data.jivha}, Mental State (मनो स्वभाव): ${data.manoSwabhav}, Other Complaints: ${data.otherComplaints}, Arsh (अर्श): ${data.arsh}, Ashmari (अश्मरी): ${data.ashmari}, Kushtha (कुष्ठ): ${data.kushtha}, Prameha (प्रमेह): ${data.prameha}, Grahani (ग्रहणी): ${data.grahani}, Shotha (शोथ): ${data.shotha}`;
+    const symptoms = `Stool (मल): ${currentFormData.mal}, Urine (मूत्र): ${currentFormData.mutra}, Appetite (क्षुधा): ${currentFormData.kshudha}, Thirst (तृष्णा): ${currentFormData.trishna}, Sleep (निद्रा): ${currentFormData.nidra}, Tongue (जिह्वा): ${currentFormData.jivha}, Mental State (मनो स्वभाव): ${currentFormData.manoSwabhav}, Other Complaints: ${currentFormData.otherComplaints}, Arsh (अर्श): ${currentFormData.arsh}, Ashmari (अश्मरी): ${currentFormData.ashmari}, Kushtha (कुष्ठ): ${currentFormData.kushtha}, Prameha (प्रमेह): ${currentFormData.prameha}, Grahani (ग्रहणी): ${currentFormData.grahani}, Shotha (शोथ): ${currentFormData.shotha}`;
 
     const actionInput: SuggestDiagnosesInput = {
       patientDetails,
@@ -39,10 +49,9 @@ export default function NewPatientPage() {
     try {
       const diagnosisResult = await getDiagnosis(actionInput);
       setResult(diagnosisResult);
-      setIsDiagnosisComplete(true);
       toast({
         title: "Diagnosis Complete",
-        description: "The AI analysis is complete. You can now save the patient.",
+        description: "The AI analysis is complete.",
       });
     } catch (error) {
       toast({
@@ -56,10 +65,10 @@ export default function NewPatientPage() {
   };
 
   const handleSavePatient = () => {
-    if (!result || !currentFormData) {
+    if (!currentFormData) {
         toast({
             title: "Cannot Save Patient",
-            description: "A diagnosis must be completed before saving the patient.",
+            description: "Please fill out the patient form before saving.",
             variant: "destructive",
         });
         return;
@@ -69,7 +78,7 @@ export default function NewPatientPage() {
       id: uuidv4(),
       name: currentFormData.name,
       lastVisit: currentFormData.visitDate.toISOString().split('T')[0],
-      dosha: result.potentialImbalances,
+      dosha: result?.potentialImbalances || 'N/A',
       ...currentFormData,
       diagnosis: result,
     };
@@ -107,10 +116,10 @@ export default function NewPatientPage() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 gap-8 mt-6">
             <DiagnosisForm 
+                onFormChange={handleFormChange}
                 onDiagnose={handleDiagnosis} 
                 onSave={handleSavePatient}
                 isLoading={isLoading} 
-                isDiagnosisComplete={isDiagnosisComplete}
             />
             <div className="space-y-8">
                 <DiagnosisResults result={result} isLoading={isLoading} />

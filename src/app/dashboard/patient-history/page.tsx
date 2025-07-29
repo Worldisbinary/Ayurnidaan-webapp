@@ -23,17 +23,22 @@ export default function PatientHistoryPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // This effect now correctly fetches data from localStorage on mount and when navigating.
-    // The component will re-render when you navigate back, triggering this effect.
+    // This effect now correctly fetches data from localStorage on mount.
     if (typeof window !== 'undefined') {
       const storedPatients = localStorage.getItem('patients');
       if (storedPatients) {
-        const parsedPatients = JSON.parse(storedPatients);
-        setPatients(parsedPatients);
-        setFilteredPatients(parsedPatients);
+        try {
+          const parsedPatients = JSON.parse(storedPatients);
+          setPatients(parsedPatients);
+          setFilteredPatients(parsedPatients);
+        } catch (error) {
+          console.error("Failed to parse patients from localStorage", error);
+          setPatients([]);
+          setFilteredPatients([]);
+        }
       }
     }
-  }, []);
+  }, []); 
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value.toLowerCase();
@@ -50,29 +55,6 @@ export default function PatientHistoryPage() {
     }
   };
   
-  // A second useEffect to ensure that when navigating back to the page, it re-fetches the data.
-  // The router object itself doesn't change, but this pattern helps with re-renders on navigation.
-   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedPatients = localStorage.getItem('patients');
-      if (storedPatients) {
-        const parsedPatients = JSON.parse(storedPatients);
-        setPatients(parsedPatients);
-        if (searchTerm) {
-             const filtered = parsedPatients.filter(
-                (patient: Patient) =>
-                patient.name.toLowerCase().includes(searchTerm) ||
-                patient.id.toLowerCase().includes(searchTerm)
-            );
-            setFilteredPatients(filtered);
-        } else {
-            setFilteredPatients(parsedPatients);
-        }
-      }
-    }
-  }, [router, searchTerm]);
-
-
   return (
     <div className="space-y-4">
        <div className="flex items-center justify-between space-y-2">
@@ -111,7 +93,7 @@ export default function PatientHistoryPage() {
                     <TableCell>{patient.id}</TableCell>
                     <TableCell className="font-medium">{patient.name}</TableCell>
                     <TableCell>{patient.lastVisit}</TableCell>
-                    <TableCell>{patient.dosha}</TableCell>
+                    <TableCell>{patient.dosha || 'N/A'}</TableCell>
                     <TableCell>
                       <Button variant="outline">View Details</Button>
                     </TableCell>

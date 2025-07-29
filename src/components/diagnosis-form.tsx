@@ -2,10 +2,11 @@
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2, Save } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2, Save, Bot } from "lucide-react";
+import React, { useEffect } from 'react';
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -54,13 +55,13 @@ const diagnosisSchema = z.object({
 export type DiagnosisFormValues = z.infer<typeof diagnosisSchema>;
 
 interface DiagnosisFormProps {
-  onDiagnose: (data: DiagnosisFormValues) => Promise<void>;
+  onFormChange: (data: DiagnosisFormValues) => void;
+  onDiagnose: () => Promise<void>;
   onSave: () => void;
   isLoading: boolean;
-  isDiagnosisComplete: boolean;
 }
 
-export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComplete }: DiagnosisFormProps) {
+export function DiagnosisForm({ onFormChange, onDiagnose, onSave, isLoading }: DiagnosisFormProps) {
   const form = useForm<DiagnosisFormValues>({
     resolver: zodResolver(diagnosisSchema),
     defaultValues: {
@@ -89,6 +90,22 @@ export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComple
     },
   });
 
+  const watchedValues = useWatch({ control: form.control });
+
+  useEffect(() => {
+    if (form.formState.isDirty) {
+      onFormChange(watchedValues as DiagnosisFormValues);
+    }
+  }, [watchedValues, onFormChange, form.formState.isDirty]);
+
+  const handleSaveClick = () => {
+    form.trigger().then(isValid => {
+        if(isValid) {
+            onSave();
+        }
+    });
+  }
+
   return (
     <Card className="shadow-lg border-2 border-primary/20">
       <CardHeader>
@@ -96,7 +113,7 @@ export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComple
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onDiagnose)} className="space-y-8">
+          <form className="space-y-8">
             <Card className="bg-background/80">
               <CardHeader>
                 <CardTitle className="text-xl font-headline">Patient Profile</CardTitle>
@@ -544,23 +561,28 @@ export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComple
             </Card>
 
             <div className="flex flex-col md:flex-row gap-4">
-                 <Button type="submit" disabled={isLoading} className="w-full text-lg py-6">
+                 <Button type="button" onClick={handleSaveClick} disabled={isLoading} className="w-full text-lg py-6">
+                    <Save className="mr-2" />
+                    Save Patient
+                </Button>
+                <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={onDiagnose}
+                    disabled={isLoading || !form.formState.isValid}
+                    className="w-full text-lg py-6"
+                >
                     {isLoading ? (
                         <>
                         <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                         Analyzing...
                         </>
-                    ) : "Get Diagnosis"}
-                </Button>
-                <Button 
-                    type="button" 
-                    variant="outline"
-                    onClick={onSave}
-                    disabled={isLoading || !isDiagnosisComplete} 
-                    className="w-full text-lg py-6"
-                >
-                    <Save className="mr-2" />
-                    Save Patient
+                    ) : (
+                        <>
+                        <Bot className="mr-2" />
+                        Get AI Diagnosis
+                        </>
+                    )}
                 </Button>
             </div>
           </form>
