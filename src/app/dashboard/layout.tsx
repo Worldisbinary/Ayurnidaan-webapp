@@ -17,6 +17,15 @@ import {
   SidebarFooter,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { 
   Leaf, 
@@ -128,22 +137,39 @@ export default function DashboardLayout({
                  <h1 className="text-2xl font-bold text-primary-foreground">AyurNidaan</h1>
               </div>
               <div className="ml-auto flex items-center gap-4">
-                  <Button variant="ghost" className="hidden sm:flex">
-                      <User className="mr-2" />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="overflow-hidden rounded-full"
+                    >
+                      <Avatar>
+                        <AvatarImage src="https://placehold.co/32x32.png" alt="User avatar" data-ai-hint="user avatar" />
+                        <AvatarFallback>
+                          <User />
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <User className="mr-2 h-4 w-4" />
                       Profile
-                  </Button>
-                  <Button variant="ghost" className="hidden sm:flex">
-                      <Gem className="mr-2" />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Gem className="mr-2 h-4 w-4" />
                       Premium
-                  </Button>
-                   <Button variant="ghost" className="hidden sm:flex">
-                      <BookText className="mr-2" />
-                      Ayurvedic Texts
-                  </Button>
-                  <Button variant="outline" onClick={handleLogout}>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />
                       Logout
-                  </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
           </header>
           <main className="flex-1">
@@ -159,5 +185,3 @@ export default function DashboardLayout({
     </SidebarProvider>
   );
 }
-
-    
