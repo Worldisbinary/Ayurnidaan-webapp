@@ -34,13 +34,26 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [activePath, setActivePath] = useState('');
+  const [activePath, setActivePath] = useState(pathname);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setActivePath(pathname);
   }, [pathname]);
 
-  const isActive = (path: string) => activePath === path;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const getLinkClass = (path: string) => {
+    if (!isClient) return 'text-muted-foreground'; // Default server-side class
+    return activePath === path ? 'text-foreground' : 'text-muted-foreground';
+  };
+
+  const getDropdownClass = () => {
+    if (!isClient) return 'text-muted-foreground'; // Default server-side class
+    return activePath.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground';
+  }
 
   const navLinks = [
     { href: '/dashboard', icon: <Home className="h-5 w-5" />, label: 'Home' },
@@ -71,14 +84,14 @@ export default function DashboardLayout({
              <Link
               key={link.href}
               href={link.href}
-              className={`transition-colors hover:text-foreground whitespace-nowrap ${isActive(link.href) ? 'text-foreground' : 'text-muted-foreground'}`}
+              className={`transition-colors hover:text-foreground whitespace-nowrap ${getLinkClass(link.href)}`}
             >
               {link.label}
             </Link>
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-               <Button variant="link" className={`transition-colors hover:text-foreground p-0 h-auto whitespace-nowrap ${activePath.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
+               <Button variant="link" className={`transition-colors hover:text-foreground p-0 h-auto whitespace-nowrap ${getDropdownClass()}`}>
                 Ayurvedic Texts
               </Button>
             </DropdownMenuTrigger>
@@ -119,7 +132,7 @@ export default function DashboardLayout({
                 <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-4 transition-colors hover:text-foreground ${isActive(link.href) ? 'text-foreground' : 'text-muted-foreground'}`}
+                    className={`flex items-center gap-4 transition-colors hover:text-foreground ${getLinkClass(link.href)}`}
                 >
                     {link.icon}
                     {link.label}
@@ -127,7 +140,7 @@ export default function DashboardLayout({
               ))}
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className={`justify-start items-center gap-4 transition-colors hover:text-foreground p-0 h-auto font-medium ${activePath.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  <Button variant="ghost" className={`justify-start items-center gap-4 transition-colors hover:text-foreground p-0 h-auto font-medium ${getDropdownClass()}`}>
                      <BookText className="h-5 w-5" />
                       Ayurvedic Texts
                   </Button>
