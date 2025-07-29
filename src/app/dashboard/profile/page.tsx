@@ -59,7 +59,10 @@ export default function ProfilePage() {
         <CardHeader>
           <CardTitle className="text-xl font-headline">Statistics</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent 
+          className="cursor-pointer"
+          onClick={() => router.push('/dashboard/patient-history')}
+        >
           <div className="flex justify-around text-center">
             <div className="flex flex-col items-center gap-2">
               <Users className="w-8 h-8 text-primary"/>
