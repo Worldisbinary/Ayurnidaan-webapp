@@ -22,7 +22,10 @@ export default function PatientHistoryPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if window is defined (i.e., we are on the client side)
+    // We are adding this key to the dependency array to force a re-render 
+    // when the user navigates back to this page.
+    const key = Math.random();
+
     if (typeof window !== 'undefined') {
       const storedPatients = localStorage.getItem('patients');
       if (storedPatients) {
@@ -46,6 +49,17 @@ export default function PatientHistoryPage() {
       setFilteredPatients(patients);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedPatients = localStorage.getItem('patients');
+      if (storedPatients) {
+        const parsedPatients = JSON.parse(storedPatients);
+        setPatients(parsedPatients);
+        setFilteredPatients(parsedPatients);
+      }
+    }
+  }, [router]);
 
   return (
     <div className="space-y-4">
