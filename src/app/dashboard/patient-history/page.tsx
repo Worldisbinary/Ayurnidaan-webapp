@@ -54,6 +54,10 @@ export default function PatientHistoryPage() {
       setFilteredPatients(patients);
     }
   };
+
+  const handleViewDetails = (patientId: string) => {
+    router.push(`/dashboard/patient-history/${patientId}`);
+  };
   
   return (
     <div className="space-y-4">
@@ -95,7 +99,7 @@ export default function PatientHistoryPage() {
                     <TableCell>{patient.lastVisit}</TableCell>
                     <TableCell>{patient.dosha || 'N/A'}</TableCell>
                     <TableCell>
-                      <Button variant="outline">View Details</Button>
+                      <Button variant="outline" onClick={() => handleViewDetails(patient.id)}>View Details</Button>
                     </TableCell>
                   </TableRow>
                 ))
