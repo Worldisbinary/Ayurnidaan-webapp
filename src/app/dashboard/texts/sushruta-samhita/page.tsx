@@ -15,6 +15,10 @@ export default function SushrutaSamhitaPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Sushruta Samhita (सुश्रुत संहिता)</h2>
+        <Button variant="outline" onClick={() => router.back()}>
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back
+        </Button>
       </div>
       <Card>
         <CardHeader>
