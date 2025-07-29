@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { SuggestDiagnosesOutput, SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { useToast } from "@/hooks/use-toast";
 import { getDiagnosis } from '@/app/actions';
-import { DiagnosisForm } from '@/components/diagnosis-form';
+import { DiagnosisForm, type DiagnosisFormValues } from '@/components/diagnosis-form';
 import { DiagnosisResults } from '@/components/diagnosis-results';
 
 export default function NewPatientPage() {
@@ -13,11 +13,21 @@ export default function NewPatientPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleDiagnosis = async (data: SuggestDiagnosesInput) => {
+  const handleDiagnosis = async (data: DiagnosisFormValues) => {
     setIsLoading(true);
     setResult(null);
+
+    const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}, Lifestyle: ${data.lifestyle}`;
+
+    const actionInput: SuggestDiagnosesInput = {
+      patientDetails,
+      medicalHistory: data.medicalHistory,
+      symptoms: data.symptoms,
+      physicalObservations: data.physicalObservations,
+    };
+
     try {
-      const diagnosisResult = await getDiagnosis(data);
+      const diagnosisResult = await getDiagnosis(actionInput);
       setResult(diagnosisResult);
     } catch (error) {
       toast({
