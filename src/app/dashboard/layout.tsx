@@ -109,27 +109,21 @@ export default function DashboardLayout({
                   <SidebarMenuSubContent>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
-                        onClick={() => {
-                          /* router.push('/dashboard/texts/charaka') */
-                        }}
+                        onClick={() => router.push('/dashboard/texts/charaka-samhita') }
                       >
                         Charaka Samhita
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
-                        onClick={() => {
-                          /* router.push('/dashboard/texts/sushruta') */
-                        }}
+                        onClick={() => router.push('/dashboard/texts/sushruta-samhita') }
                       >
                         Sushruta Samhita
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
-                        onClick={() => {
-                          /* router.push('/dashboard/texts/ashtanga') */
-                        }}
+                        onClick={() => router.push('/dashboard/texts/ashtanga-hridayam')}
                       >
                         Ashtanga Hridayam
                       </SidebarMenuSubButton>
