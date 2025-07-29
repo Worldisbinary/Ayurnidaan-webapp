@@ -37,7 +37,7 @@ export default function DashboardLayout({
   const isActive = (path: string) => pathname === path;
 
   const navLinks = [
-    { href: '/dashboard', icon: <Home className="h-5 w-5" />, label: 'Dashboard' },
+    { href: '/dashboard', icon: <Home className="h-5 w-5" />, label: 'Home' },
     { href: '/dashboard/new-patient', icon: <PlusCircle className="h-5 w-5" />, label: 'New Patient' },
     { href: '/dashboard/patient-history', icon: <History className="h-5 w-5" />, label: 'Past Patients' },
     { href: '/dashboard/medicines', icon: <Pill className="h-5 w-5" />, label: 'Medicines' },
