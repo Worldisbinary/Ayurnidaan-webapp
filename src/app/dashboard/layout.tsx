@@ -85,7 +85,7 @@ export default function DashboardLayout({
                <SidebarMenuItem>
                  <SidebarMenuButton 
                     tooltip="Medicines"
-                    onClick={() => { /* router.push('/dashboard/medicines') */ }}
+                    onClick={() => router.push('/dashboard/medicines')}
                   >
                    <Pill />
                    <span>Medicines</span>
@@ -152,35 +152,6 @@ export default function DashboardLayout({
                    <Gem className="mr-2 h-4 w-4" />
                    Premium
                 </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="overflow-hidden rounded-full"
-                    >
-                      <Avatar>
-                        <AvatarImage src="https://placehold.co/32x32.png" alt="User avatar" data-ai-hint="user avatar" />
-                        <AvatarFallback>
-                          <User />
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </div>
           </header>
           <main className="flex-1">

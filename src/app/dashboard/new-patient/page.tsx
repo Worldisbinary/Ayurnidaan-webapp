@@ -2,17 +2,21 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { format } from "date-fns";
 import type { SuggestDiagnosesOutput, SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { useToast } from "@/hooks/use-toast";
 import { getDiagnosis } from '@/app/actions';
 import { DiagnosisForm, type DiagnosisFormValues } from '@/components/diagnosis-form';
 import { DiagnosisResults } from '@/components/diagnosis-results';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft } from 'lucide-react';
 
 export default function NewPatientPage() {
   const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleDiagnosis = async (data: DiagnosisFormValues) => {
     setIsLoading(true);
@@ -65,6 +69,10 @@ export default function NewPatientPage() {
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">New Patient Diagnosis</h2>
+            <Button variant="outline" onClick={() => router.back()}>
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Back
+            </Button>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 gap-8 mt-6">
             <DiagnosisForm onDiagnose={handleDiagnosis} isLoading={isLoading} />

@@ -2,11 +2,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search } from 'lucide-react';
+import { Search, ChevronLeft } from 'lucide-react';
 
 interface Patient {
   id: string;
@@ -17,6 +18,7 @@ interface Patient {
 
 export default function PatientHistoryPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     // Check if window is defined (i.e., we are on the client side)
@@ -32,6 +34,10 @@ export default function PatientHistoryPage() {
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
        <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Past Patients</h2>
+             <Button variant="outline" onClick={() => router.back()}>
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Back
+            </Button>
         </div>
       <Card>
         <CardHeader>
