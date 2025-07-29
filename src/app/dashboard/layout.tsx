@@ -56,9 +56,10 @@ export default function DashboardLayout({
       <div className="flex min-h-screen">
          <Sidebar collapsible="icon" className="group-data-[collapsible=icon]:border-r">
           <SidebarHeader>
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <Leaf className="h-6 w-6 text-primary" />
-              </Button>
+              <div className="flex items-center gap-2">
+                 <Leaf className="w-8 h-8 text-primary" />
+                 <h1 className="text-xl font-bold text-primary-foreground group-data-[collapsible=icon]:hidden">AyurNidaan</h1>
+              </div>
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
