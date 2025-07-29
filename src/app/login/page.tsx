@@ -93,9 +93,25 @@ export default function LoginPage() {
             <h1 className="text-4xl font-headline font-bold text-primary-foreground">Ayurnidaan</h1>
           </div>
           <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>
-          <CardDescription>Sign in to continue to your dashboard.</CardDescription>
+          <CardDescription>Sign in or continue as a guest.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <Button variant="secondary" className="w-full text-lg py-6" onClick={handleGuestLogin}>
+                <User className="mr-2" />
+                Continue as Guest
+            </Button>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or sign in with</span>
+            </div>
+          </div>
+          
           <div className="space-y-4">
             {!otpSent ? (
               <>
@@ -138,23 +154,10 @@ export default function LoginPage() {
 
           <div id="recaptcha-container"></div>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 gap-4">
             <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin}>
               <FcGoogle className="mr-2 w-6 h-6" />
               Google
-            </Button>
-             <Button variant="secondary" className="w-full text-lg py-6" onClick={handleGuestLogin}>
-              <User className="mr-2" />
-              Continue as Guest
             </Button>
           </div>
         </CardContent>
@@ -165,3 +168,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+    
