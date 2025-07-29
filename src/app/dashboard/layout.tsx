@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuSub,
   SidebarMenuSubButton,
+  SidebarMenuSubContent,
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarInset,
