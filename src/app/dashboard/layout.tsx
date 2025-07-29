@@ -68,16 +68,16 @@ export default function DashboardLayout({
                     onClick={() => router.push('/dashboard/new-patient')}
                   >
                    <Bot />
-                   <span>AI Diagnosis</span>
+                   <span className="font-bold text-base">AI Diagnosis</span>
                  </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                  <SidebarMenuButton 
-                    tooltip="Patient History"
+                    tooltip="Past Patients"
                     onClick={() => router.push('/dashboard/patient-history')}
                   >
                    <History />
-                   <span>Patient History</span>
+                   <span>Past Patients</span>
                  </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem>
@@ -130,7 +130,7 @@ export default function DashboardLayout({
           </SidebarContent>
         </Sidebar>
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-10 flex items-center gap-4 border-b bg-background px-4 py-2 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <header className="sticky top-0 z-10 flex items-center gap-4 border-b bg-background px-4 py-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
               <SidebarTrigger className="sm:hidden" />
               <div className="flex items-center gap-2">
                  <Leaf className="w-8 h-8 text-primary" />
