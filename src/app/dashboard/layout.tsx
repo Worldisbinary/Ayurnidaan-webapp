@@ -35,6 +35,8 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
 
   useEffect(() => {
     setIsClient(true);
@@ -43,7 +45,7 @@ export default function DashboardLayout({
   const getLinkClass = (path: string) => {
     // On the server or before hydration, return a default class
     if (!isClient) {
-      return 'text-primary-foreground/70 hover:text-primary-foreground px-3 py-1';
+      return 'text-primary-foreground/70 hover:text-primary-foreground';
     }
     // On the client, determine the class based on the current path
     const isActive = pathname === path;
@@ -57,7 +59,7 @@ export default function DashboardLayout({
       return 'text-primary-foreground/70 hover:text-primary-foreground';
     }
     const isActive = pathname.startsWith('/dashboard/texts');
-    return isActive ? 'text-primary-foreground' : 'text-primary-foreground/70 hover:text-primary-foreground';
+    return isActive ? 'text-primary' : 'text-primary-foreground/70 hover:text-primary-foreground';
   }
 
   const navLinks = [
@@ -72,7 +74,12 @@ export default function DashboardLayout({
      { href: '/dashboard/texts/charaka-samhita', label: 'Charaka Samhita' },
      { href: '/dashboard/texts/sushruta-samhita', label: 'Sushruta Samhita' },
      { href: '/dashboard/texts/ashtanga-hridayam', label: 'Ashtanga Hridayam' },
-  ]
+  ];
+  
+  const handleMobileLinkClick = (href: string) => {
+    router.push(href);
+    setIsSheetOpen(false);
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -89,7 +96,7 @@ export default function DashboardLayout({
              <Link
               key={link.href}
               href={link.href}
-              className={`transition-colors whitespace-nowrap ${getLinkClass(link.href)}`}
+              className={`transition-colors whitespace-nowrap px-3 py-1 ${getLinkClass(link.href)}`}
             >
               {link.label}
             </Link>
@@ -113,7 +120,7 @@ export default function DashboardLayout({
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
-        <Sheet>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
             <Button
               variant="outline"
@@ -129,6 +136,7 @@ export default function DashboardLayout({
               <Link
                 href="/dashboard"
                 className="flex items-center gap-2 text-lg font-semibold"
+                onClick={() => setIsSheetOpen(false)}
               >
                 <Leaf className="h-6 w-6 text-primary" />
                 <span >Ayurnidaan</span>
@@ -137,7 +145,8 @@ export default function DashboardLayout({
                 <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-4 transition-colors hover:text-foreground ${getLinkClass(link.href).replace('text-primary-foreground/70', 'text-muted-foreground').replace('text-primary-foreground', 'text-foreground')}`}
+                    onClick={() => handleMobileLinkClick(link.href)}
+                    className={`flex items-center gap-4 transition-colors hover:text-foreground ${pathname === link.href ? 'text-foreground' : 'text-muted-foreground'}`}
                 >
                     {link.icon}
                     {link.label}
@@ -145,7 +154,7 @@ export default function DashboardLayout({
               ))}
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className={`justify-start items-center gap-4 transition-colors hover:text-foreground p-0 h-auto font-medium ${getDropdownClass()}`}>
+                  <Button variant="ghost" className={`justify-start items-center gap-4 transition-colors hover:text-foreground p-0 h-auto font-medium ${pathname.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
                      <BookText className="h-5 w-5" />
                       Ayurvedic Texts
                   </Button>
@@ -155,7 +164,7 @@ export default function DashboardLayout({
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                         {textLinks.map((link) => (
-                            <DropdownMenuItem key={link.href} onClick={() => router.push(link.href)}>
+                            <DropdownMenuItem key={link.href} onClick={() => handleMobileLinkClick(link.href)}>
                                 {link.label}
                             </DropdownMenuItem>
                         ))}
@@ -165,8 +174,8 @@ export default function DashboardLayout({
             </nav>
           </SheetContent>
         </Sheet>
-        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-          <div className="ml-auto flex-1 sm:flex-initial">
+        <div className="flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">
+          <div className="flex-initial">
              <Button variant="outline" className="bg-primary text-primary-foreground hover:bg-primary-foreground/10" onClick={() => router.push('/dashboard/premium')}>
                    <Gem className="mr-2 h-4 w-4" />
                    Premium
