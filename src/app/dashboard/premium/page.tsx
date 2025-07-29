@@ -23,7 +23,7 @@ export default function PremiumPage() {
       </div>
       
       <p className="text-lg text-muted-foreground">
-        Unlock exclusive access to advanced diagnostic features, in-depth analytics, and priority support at a special price for students.
+        छात्रों के लिए विशेष मूल्य पर उन्नत नैदानिक ​​सुविधाओं, गहन विश्लेषण और प्राथमिकता समर्थन तक विशेष पहुंच प्राप्त करें।
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
@@ -96,4 +96,5 @@ export default function PremiumPage() {
     </div>
   );
 }
+
 
