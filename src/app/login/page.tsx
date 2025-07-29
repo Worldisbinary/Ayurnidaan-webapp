@@ -36,13 +36,14 @@ export default function LoginPage() {
 
 
   const handlePhoneLogin = async () => {
-    if (phone.length < 10) {
-        toast({ title: "Error", description: "Please enter a valid phone number.", variant: "destructive" });
+    if (phone.length !== 10) {
+        toast({ title: "Error", description: "Please enter a valid 10-digit phone number.", variant: "destructive" });
         return;
     }
     try {
         const appVerifier = window.recaptchaVerifier;
-        const result = await signInWithPhoneNumber(auth, `+${phone}`, appVerifier);
+        const formattedPhone = `+91${phone}`;
+        const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
         setConfirmationResult(result);
         setOtpSent(true);
         toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
@@ -103,7 +104,7 @@ export default function LoginPage() {
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="Enter 91xxxxxxxxxx"
+                    placeholder="Enter 10-digit mobile number"
                     className="pl-10"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
