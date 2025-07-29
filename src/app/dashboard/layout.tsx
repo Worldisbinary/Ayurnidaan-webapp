@@ -35,7 +35,8 @@ import {
   History, 
   Gem,
   PlusCircle,
-  Pill
+  Pill,
+  Package
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -88,6 +89,15 @@ export default function DashboardLayout({
                   >
                    <Pill />
                    <span>Medicines</span>
+                 </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton 
+                    tooltip="Supplements"
+                    onClick={() => router.push('/dashboard/supplements')}
+                  >
+                   <Package />
+                   <span>Supplements</span>
                  </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
