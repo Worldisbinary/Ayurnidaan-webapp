@@ -46,8 +46,10 @@ export default function DashboardLayout({
   }, []);
 
   const getLinkClass = (path: string) => {
-    if (!isClient) return 'text-muted-foreground'; // Default server-side class
-    return activePath === path ? 'text-foreground' : 'text-muted-foreground';
+    if (!isClient) return 'text-muted-foreground px-3 py-1'; // Default server-side class
+    return activePath === path 
+      ? 'bg-primary/10 text-primary rounded-full px-3 py-1' 
+      : 'text-muted-foreground px-3 py-1';
   };
 
   const getDropdownClass = () => {
