@@ -19,7 +19,7 @@ export default function NewPatientPage() {
 
     const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}`;
     
-    const symptoms = `Stool (Mal): ${data.mal}, Urine (Mutra): ${data.mutra}, Appetite (Kshudha): ${data.kshudha}, Thirst (Trishna): ${data.trishna}, Sleep (Nidra): ${data.nidra}, Tongue (Jivha): ${data.jivha}, Mental State (Mano Swabhav): ${data.manoSwabhav}, Other Complaints: ${data.otherComplaints}`;
+    const symptoms = `Stool (मल): ${data.mal}, Urine (मूत्र): ${data.mutra}, Appetite (क्षुधा): ${data.kshudha}, Thirst (तृष्णा): ${data.trishna}, Sleep (निद्रा): ${data.nidra}, Tongue (जिह्वा): ${data.jivha}, Mental State (मनो स्वभाव): ${data.manoSwabhav}, Other Complaints: ${data.otherComplaints}, Arsh (अर्श): ${data.arsh}, Ashmari (अश्मरी): ${data.ashmari}, Kushtha (कुष्ठ): ${data.kushtha}, Prameha (प्रमेह): ${data.prameha}, Grahani (ग्रहणी): ${data.grahani}, Shotha (शोथ): ${data.shotha}`;
 
 
     const actionInput: SuggestDiagnosesInput = {

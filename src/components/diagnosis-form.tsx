@@ -44,6 +44,12 @@ const diagnosisSchema = z.object({
   jivha: z.string().min(1, "This field is required."),
   manoSwabhav: z.string().min(1, "This field is required."),
   otherComplaints: z.string().optional(),
+  arsh: z.string().min(1, "This field is required."),
+  ashmari: z.string().min(1, "This field is required."),
+  kushtha: z.string().min(1, "This field is required."),
+  prameha: z.string().min(1, "This field is required."),
+  grahani: z.string().min(1, "This field is required."),
+  shotha: z.string().min(1, "This field is required."),
 });
 
 export type DiagnosisFormValues = z.infer<typeof diagnosisSchema>;
@@ -65,14 +71,20 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
       diet: "vegetarian",
       visitDate: new Date(),
       location: "",
-      mal: "",
-      mutra: "",
-      kshudha: "",
-      trishna: "",
-      nidra: "",
-      jivha: "",
-      manoSwabhav: "",
+      mal: "Normal",
+      mutra: "Normal",
+      kshudha: "Normal",
+      trishna: "Normal",
+      nidra: "Normal",
+      jivha: "Niram (Clear)",
+      manoSwabhav: "Calm",
       otherComplaints: "",
+      arsh: "No",
+      ashmari: "No",
+      kushtha: "No",
+      prameha: "No",
+      grahani: "No",
+      shotha: "No",
     },
   });
 
@@ -259,95 +271,264 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
-                    control={form.control}
-                    name="mal"
-                    render={({ field }) => (
+                      control={form.control}
+                      name="mal"
+                      render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Stool (Mal)</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Vibandh (Constipation), Normal" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                          <FormLabel>Stool (मल)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Normal">Normal</SelectItem>
+                              <SelectItem value="Vibandh (Constipation)">Vibandh (Constipation)</SelectItem>
+                              <SelectItem value="Atisar (Diarrhea)">Atisar (Diarrhea)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
                         </FormItem>
-                    )}
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="mutra"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Urine (मूत्र)</FormLabel>
+                           <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Normal">Normal</SelectItem>
+                              <SelectItem value="Dah Yukt (Burning)">Dah Yukt (Burning)</SelectItem>
+                              <SelectItem value="Rakt Yukt (With Blood)">Rakt Yukt (With Blood)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="kshudha"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Appetite (क्षुधा)</FormLabel>
+                           <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Normal">Normal</SelectItem>
+                              <SelectItem value="Decreased">Decreased</SelectItem>
+                              <SelectItem value="Increased">Increased</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="trishna"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Thirst (तृष्णा)</FormLabel>
+                           <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Normal">Normal</SelectItem>
+                              <SelectItem value="Decreased">Decreased</SelectItem>
+                              <SelectItem value="Increased">Increased</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="nidra"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Sleep (निद्रा)</FormLabel>
+                           <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Normal">Normal</SelectItem>
+                              <SelectItem value="Khandit (Disturbed)">Khandit (Disturbed)</SelectItem>
+                              <SelectItem value="Anidra (Sleeplessness)">Anidra (Sleeplessness)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="jivha"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Tongue (जिह्वा)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Niram (Clear)">Niram (Clear)</SelectItem>
+                              <SelectItem value="Saam (Coated)">Saam (Coated)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="manoSwabhav"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mental State (मनो स्वभाव)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Calm">Calm</SelectItem>
+                              <SelectItem value="Chidchida (Irritable)">Chidchida (Irritable)</SelectItem>
+                              <SelectItem value="Udaseen (Depressed)">Udaseen (Depressed)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="arsh"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Arsh (अर्श)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="Yes, Dry">Yes, Dry</SelectItem>
+                              <SelectItem value="Yes, Bleeding">Yes, Bleeding</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                      <FormField
-                    control={form.control}
-                    name="mutra"
-                    render={({ field }) => (
+                      control={form.control}
+                      name="ashmari"
+                      render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Urine (Mutra)</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Dah Yukt (Burning), Normal" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                          <FormLabel>Ashmari (अश्मरी)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="Yes, with Pain">Yes, with Pain</SelectItem>
+                              <SelectItem value="Yes, History">Yes, History</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
                         </FormItem>
-                    )}
+                      )}
                     />
                      <FormField
-                    control={form.control}
-                    name="kshudha"
-                    render={({ field }) => (
+                      control={form.control}
+                      name="kushtha"
+                      render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Appetite (Kshudha)</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Decreased, Increased, Normal" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                          <FormLabel>Kushtha (कुष्ठ)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="Dry Eczema">Dry Eczema</SelectItem>
+                              <SelectItem value="Psoriasis">Psoriasis</SelectItem>
+                              <SelectItem value="Acne/Pimples">Acne/Pimples</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
                         </FormItem>
-                    )}
+                      )}
                     />
                      <FormField
-                    control={form.control}
-                    name="trishna"
-                    render={({ field }) => (
+                      control={form.control}
+                      name="prameha"
+                      render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Thirst (Trishna)</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Decreased, Increased, Normal" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                          <FormLabel>Prameha (प्रमेह)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="Increased Frequency">Increased Frequency</SelectItem>
+                              <SelectItem value="Family History">Family History</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
                         </FormItem>
-                    )}
+                      )}
                     />
                      <FormField
-                    control={form.control}
-                    name="nidra"
-                    render={({ field }) => (
+                      control={form.control}
+                      name="grahani"
+                      render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Sleep (Nidra)</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Khandit (Disturbed), Normal" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                          <FormLabel>Grahani (ग्रहणी)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="IBS">IBS</SelectItem>
+                              <SelectItem value="Indigestion">Indigestion</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
                         </FormItem>
-                    )}
+                      )}
                     />
                      <FormField
-                    control={form.control}
-                    name="jivha"
-                    render={({ field }) => (
+                      control={form.control}
+                      name="shotha"
+                      render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Tongue (Jivha)</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Saam (Coated), Niram (Clear)" {...field} />
-                        </FormControl>
-                        <FormMessage />
+                          <FormLabel>Shotha (शोथ)</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="Localized">Localized</SelectItem>
+                              <SelectItem value="Generalized">Generalized</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
                         </FormItem>
-                    )}
-                    />
-                     <FormField
-                    control={form.control}
-                    name="manoSwabhav"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Mental State (Mano Swabhav)</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Chidchida (Irritable), Calm" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
+                      )}
                     />
                      <FormField
                     control={form.control}
