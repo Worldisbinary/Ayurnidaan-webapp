@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config, { isServer }) => {
+    config.externals.push('encoding');
+    return config;
+  },
 };
 
 export default nextConfig;

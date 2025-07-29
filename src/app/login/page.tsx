@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,18 +9,77 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Leaf, User, Key, Phone, LogIn } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
+import { auth } from '@/lib/firebase';
+import { RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useToast } from "@/hooks/use-toast";
+
 
 export default function LoginPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [confirmationResult, setConfirmationResult] = useState<any>(null);
+  const [otpSent, setOtpSent] = useState(false);
 
-  const handleLogin = () => {
-    // Placeholder for login logic
-    router.push('/dashboard');
+  // Initialize reCAPTCHA
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response: any) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        }
+      });
+    }
+  }, []);
+
+
+  const handlePhoneLogin = async () => {
+    if (phone.length < 10) {
+        toast({ title: "Error", description: "Please enter a valid phone number.", variant: "destructive" });
+        return;
+    }
+    try {
+        const appVerifier = window.recaptchaVerifier;
+        const result = await signInWithPhoneNumber(auth, `+${phone}`, appVerifier);
+        setConfirmationResult(result);
+        setOtpSent(true);
+        toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
+    } catch (error: any) {
+        console.error("Error sending OTP:", error);
+        toast({ title: "Error", description: `Failed to send OTP: ${error.message}`, variant: "destructive" });
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (otp.length !== 6) {
+        toast({ title: "Error", description: "Please enter a valid 6-digit OTP.", variant: "destructive" });
+        return;
+    }
+    try {
+        await confirmationResult.confirm(otp);
+        toast({ title: "Success", description: "You have been successfully logged in." });
+        router.push('/dashboard');
+    } catch (error: any) {
+        console.error("Error verifying OTP:", error);
+        toast({ title: "Error", description: `Failed to verify OTP: ${error.message}`, variant: "destructive" });
+    }
   };
   
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      toast({ title: "Success", description: "You have been successfully logged in with Google." });
+      router.push('/dashboard');
+    } catch (error: any) {
+       console.error("Error with Google login:", error);
+       toast({ title: "Error", description: `Google sign-in failed: ${error.message}`, variant: "destructive" });
+    }
+  }
+
   const handleGuestLogin = () => {
-    // Placeholder for guest logic
     router.push('/dashboard');
   };
 
@@ -37,22 +96,46 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="Enter your phone number"
-                className="pl-10"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-            <Button onClick={handleLogin} className="w-full text-lg py-6">
-              <LogIn className="mr-2" />
-              Sign In with Phone
-            </Button>
+            {!otpSent ? (
+              <>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="Enter 91xxxxxxxxxx"
+                    className="pl-10"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+                <Button onClick={handlePhoneLogin} className="w-full text-lg py-6">
+                  <LogIn className="mr-2" />
+                  Send OTP
+                </Button>
+              </>
+            ) : (
+               <>
+                <div className="relative">
+                   <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                        id="otp"
+                        type="text"
+                        placeholder="Enter OTP"
+                        className="pl-10"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                    />
+                </div>
+                <Button onClick={handleVerifyOtp} className="w-full text-lg py-6">
+                  Verify OTP & Sign In
+                </Button>
+              </>
+            )}
+            
           </div>
+
+          <div id="recaptcha-container"></div>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -64,7 +147,7 @@ export default function LoginPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4">
-            <Button variant="outline" className="w-full text-lg py-6">
+            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin}>
               <FcGoogle className="mr-2 w-6 h-6" />
               Google
             </Button>
