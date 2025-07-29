@@ -65,23 +65,25 @@ export default function DashboardPage() {
        {!isLoading && !error && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
           {articles.map((article, index) => (
-            <Card key={index}>
-              <CardHeader className="p-0">
-                 <Image 
-                  src={`https://placehold.co/600x400.png`} 
-                  alt={article.title}
-                  data-ai-hint={article.imageHint}
-                  width={600}
-                  height={400}
-                  className="rounded-t-lg object-cover"
-                />
-              </CardHeader>
-              <CardContent className="p-6">
-                <p className="text-sm text-muted-foreground mb-1">{article.source}</p>
-                <CardTitle className="text-xl font-headline mb-2">{article.title}</CardTitle>
-                <p className="text-muted-foreground">{article.description}</p>
-              </CardContent>
-            </Card>
+            <a key={index} href={article.url} target="_blank" rel="noopener noreferrer" className="block hover:ring-2 hover:ring-primary rounded-lg transition-shadow duration-300">
+                <Card className="h-full">
+                <CardHeader className="p-0">
+                    <Image 
+                    src={`https://placehold.co/600x400.png`} 
+                    alt={article.title}
+                    data-ai-hint={article.imageHint}
+                    width={600}
+                    height={400}
+                    className="rounded-t-lg object-cover"
+                    />
+                </CardHeader>
+                <CardContent className="p-6">
+                    <p className="text-sm text-muted-foreground mb-1">{article.source}</p>
+                    <CardTitle className="text-xl font-headline mb-2">{article.title}</CardTitle>
+                    <p className="text-muted-foreground">{article.description}</p>
+                </CardContent>
+                </Card>
+            </a>
           ))}
        </div>
        )}
