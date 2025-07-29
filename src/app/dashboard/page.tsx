@@ -35,8 +35,7 @@ export default function DashboardPage() {
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8">
        <div className="space-y-2">
-         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-         <p className="text-muted-foreground">Explore the latest articles and insights in Ayurveda.</p>
+         <h2 className="text-3xl font-bold tracking-tight">Explore the latest articles and insights in Ayurveda.</h2>
        </div>
 
       {isLoading && (

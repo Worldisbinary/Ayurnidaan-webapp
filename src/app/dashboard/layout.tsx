@@ -85,7 +85,7 @@ export default function DashboardLayout({
                     onClick={() => router.push('/dashboard/new-patient')}
                   >
                    <PlusCircle />
-                   <span className="font-bold text-base">New Patient</span>
+                   <span className="font-medium text-base">New Patient</span>
                  </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
