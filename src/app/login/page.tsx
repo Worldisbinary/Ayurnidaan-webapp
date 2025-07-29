@@ -28,15 +28,29 @@ export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false);
 
   const setupRecaptcha = () => {
-    if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response: any) => {
-              // reCAPTCHA solved, allow signInWithPhoneNumber.
-            }
-        });
+    // Return existing verifier if it exists
+    if (window.recaptchaVerifier) {
+      return window.recaptchaVerifier;
     }
-    return window.recaptchaVerifier;
+    // Cleanup previous container if it exists
+    const oldContainer = document.getElementById('recaptcha-container');
+    if (oldContainer) {
+        oldContainer.remove();
+    }
+    
+    const container = document.createElement('div');
+    container.id = 'recaptcha-container';
+    document.body.appendChild(container);
+
+
+    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response: any) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        }
+    });
+    window.recaptchaVerifier = verifier;
+    return verifier;
   };
 
   const handlePhoneLogin = async () => {
@@ -53,7 +67,7 @@ export default function LoginPage() {
         toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
     } catch (error: any) {
         console.error("Error sending OTP:", error);
-        toast({ title: "Error", description: `Failed to send OTP: ${error.message}`, variant: "destructive" });
+        toast({ title: "Error", description: `Failed to send OTP. This feature requires billing to be enabled in Firebase.`, variant: "destructive" });
     }
   };
 
@@ -159,9 +173,7 @@ export default function LoginPage() {
             )}
             
           </div>
-
-          <div id="recaptcha-container"></div>
-
+          
           <div className="grid grid-cols-1 gap-4">
             <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin}>
               <FcGoogle className="mr-2 w-6 h-6" />
