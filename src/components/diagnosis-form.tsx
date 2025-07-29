@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2, Save } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -55,12 +55,10 @@ export type DiagnosisFormValues = z.infer<typeof diagnosisSchema>;
 
 interface DiagnosisFormProps {
   onDiagnose: (data: DiagnosisFormValues) => Promise<void>;
-  onSave: () => void;
   isLoading: boolean;
-  isDiagnosisComplete: boolean;
 }
 
-export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComplete }: DiagnosisFormProps) {
+export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
   const form = useForm<DiagnosisFormValues>({
     resolver: zodResolver(diagnosisSchema),
     defaultValues: {
@@ -547,26 +545,14 @@ export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComple
                 </CardContent>
             </Card>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-                <Button type="submit" disabled={isLoading} className="w-full text-lg py-6">
-                {isLoading ? (
-                    <>
-                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                    Analyzing...
-                    </>
-                ) : "Get Diagnosis"}
-                </Button>
-                <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={onSave} 
-                    disabled={isLoading || !isDiagnosisComplete} 
-                    className="w-full text-lg py-6"
-                >
-                    <Save className="mr-2 h-6 w-6" />
-                    Save Patient
-                </Button>
-            </div>
+            <Button type="submit" disabled={isLoading} className="w-full text-lg py-6">
+            {isLoading ? (
+                <>
+                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                Analyzing...
+                </>
+            ) : "Get Diagnosis"}
+            </Button>
           </form>
         </Form>
       </CardContent>

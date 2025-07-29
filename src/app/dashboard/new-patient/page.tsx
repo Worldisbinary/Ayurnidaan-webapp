@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { format } from "date-fns";
 import type { SuggestDiagnosesOutput, SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { useToast } from "@/hooks/use-toast";
 import { getDiagnosis } from '@/app/actions';
@@ -14,17 +13,13 @@ import { ChevronLeft } from 'lucide-react';
 
 export default function NewPatientPage() {
   const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
-  const [formData, setFormData] = useState<DiagnosisFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDiagnosisComplete, setIsDiagnosisComplete] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
   const handleDiagnosis = async (data: DiagnosisFormValues) => {
     setIsLoading(true);
     setResult(null);
-    setIsDiagnosisComplete(false);
-    setFormData(data); 
 
     const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}`;
     
@@ -38,7 +33,6 @@ export default function NewPatientPage() {
     try {
       const diagnosisResult = await getDiagnosis(actionInput);
       setResult(diagnosisResult);
-      setIsDiagnosisComplete(true);
     } catch (error) {
       toast({
         title: "Error",
@@ -47,35 +41,6 @@ export default function NewPatientPage() {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleSavePatient = () => {
-    if (!formData || !result) {
-        toast({
-            title: "Cannot Save Patient",
-            description: "Please get a diagnosis before saving the patient.",
-            variant: "destructive",
-        });
-        return;
-    }
-
-    if (typeof window !== 'undefined') {
-        const storedPatients = localStorage.getItem('patients');
-        const patients = storedPatients ? JSON.parse(storedPatients) : [];
-        const newPatient = {
-          id: `PID-${String(patients.length + 1).padStart(3, '0')}`,
-          name: formData.name,
-          lastVisit: format(formData.visitDate, "yyyy-MM-dd"),
-          dosha: result.potentialImbalances || 'N/A',
-        };
-        patients.push(newPatient);
-        localStorage.setItem('patients', JSON.stringify(patients));
-        toast({
-            title: "Patient Saved",
-            description: `${formData.name} has been added to the patient list.`,
-        });
-        router.push('/dashboard/patient-history');
     }
   };
 
@@ -91,9 +56,7 @@ export default function NewPatientPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 gap-8 mt-6">
             <DiagnosisForm 
                 onDiagnose={handleDiagnosis} 
-                onSave={handleSavePatient}
                 isLoading={isLoading} 
-                isDiagnosisComplete={isDiagnosisComplete}
             />
             <div className="space-y-8">
                 <DiagnosisResults result={result} isLoading={isLoading} />
