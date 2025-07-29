@@ -16,18 +16,19 @@ export default function NewPatientPage() {
   const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
   const [formData, setFormData] = useState<DiagnosisFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDiagnosisComplete, setIsDiagnosisComplete] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
   const handleDiagnosis = async (data: DiagnosisFormValues) => {
     setIsLoading(true);
     setResult(null);
-    setFormData(data); // Save form data when diagnosis starts
+    setIsDiagnosisComplete(false);
+    setFormData(data); 
 
     const patientDetails = `Name: ${data.name}, Age: ${data.age}, Gender: ${data.gender}, Weight: ${data.weight}, Height: ${data.height}, Diet: ${data.diet}, Visit Date: ${data.visitDate.toISOString().split('T')[0]}, Location: ${data.location}`;
     
     const symptoms = `Stool (मल): ${data.mal}, Urine (मूत्र): ${data.mutra}, Appetite (क्षुधा): ${data.kshudha}, Thirst (तृष्णा): ${data.trishna}, Sleep (निद्रा): ${data.nidra}, Tongue (जिह्वा): ${data.jivha}, Mental State (मनो स्वभाव): ${data.manoSwabhav}, Other Complaints: ${data.otherComplaints}, Arsh (अर्श): ${data.arsh}, Ashmari (अश्मरी): ${data.ashmari}, Kushtha (कुष्ठ): ${data.kushtha}, Prameha (प्रमेह): ${data.prameha}, Grahani (ग्रहणी): ${data.grahani}, Shotha (शोथ): ${data.shotha}`;
-
 
     const actionInput: SuggestDiagnosesInput = {
       patientDetails,
@@ -37,12 +38,14 @@ export default function NewPatientPage() {
     try {
       const diagnosisResult = await getDiagnosis(actionInput);
       setResult(diagnosisResult);
+      setIsDiagnosisComplete(true);
     } catch (error) {
       toast({
         title: "Error",
         description: (error as Error).message,
         variant: "destructive",
       });
+      setIsDiagnosisComplete(false);
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +93,7 @@ export default function NewPatientPage() {
                 onDiagnose={handleDiagnosis} 
                 onSave={handleSavePatient}
                 isLoading={isLoading} 
-                isDiagnosisComplete={!!result}
+                isDiagnosisComplete={isDiagnosisComplete}
             />
             <div className="space-y-8">
                 <DiagnosisResults result={result} isLoading={isLoading} />
