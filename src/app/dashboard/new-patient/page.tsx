@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { format } from "date-fns";
 import type { SuggestDiagnosesOutput, SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { useToast } from "@/hooks/use-toast";
 import { getDiagnosis } from '@/app/actions';
@@ -30,6 +31,25 @@ export default function NewPatientPage() {
     try {
       const diagnosisResult = await getDiagnosis(actionInput);
       setResult(diagnosisResult);
+
+      // Save patient to localStorage
+      if (typeof window !== 'undefined') {
+        const storedPatients = localStorage.getItem('patients');
+        const patients = storedPatients ? JSON.parse(storedPatients) : [];
+        const newPatient = {
+          id: `PID-${String(patients.length + 1).padStart(3, '0')}`,
+          name: data.name,
+          lastVisit: format(data.visitDate, "yyyy-MM-dd"),
+          dosha: diagnosisResult.potentialImbalances || 'N/A',
+        };
+        patients.push(newPatient);
+        localStorage.setItem('patients', JSON.stringify(patients));
+        toast({
+            title: "Patient Saved",
+            description: `${data.name} has been added to the patient list.`,
+        });
+      }
+
     } catch (error) {
       toast({
         title: "Error",
@@ -55,5 +75,3 @@ export default function NewPatientPage() {
     </div>
   );
 }
-
-    

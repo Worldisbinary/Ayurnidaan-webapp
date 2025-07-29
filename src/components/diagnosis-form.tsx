@@ -31,7 +31,7 @@ const diagnosisSchema = z.object({
   gender: z.string().min(1, 'Gender is required.'),
   weight: z.string().min(1, 'Weight is required.'),
   height: z.string().min(1, 'Height is required.'),
-  diet: z.enum(['vegetarian', 'non-vegetarian', 'vegan']),
+  diet: z.enum(["Vegetarian (शाकाहारी)", "Non-Vegetarian (मांसाहारी)", "Vegan (वीगन)"]),
   visitDate: z.date({
     required_error: "A date of visit is required.",
   }),
@@ -68,7 +68,7 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
       gender: "",
       weight: "",
       height: "",
-      diet: "vegetarian",
+      diet: "Vegetarian (शाकाहारी)",
       visitDate: new Date(),
       location: "",
       mal: "Normal (सामान्य)",
@@ -185,26 +185,26 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                 </div>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
-                    control={form.control}
-                    name="diet"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Diet</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select diet type" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                            <SelectItem value="vegetarian">Vegetarian</SelectItem>
-                            <SelectItem value="non-vegetarian">Non-Vegetarian</SelectItem>
-                            <SelectItem value="vegan">Vegan</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                        </FormItem>
-                    )}
+                      control={form.control}
+                      name="diet"
+                      render={({ field }) => (
+                          <FormItem>
+                          <FormLabel>Diet</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                              <SelectTrigger>
+                                  <SelectValue placeholder="Select diet type" />
+                              </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                              <SelectItem value="Vegetarian (शाकाहारी)">Vegetarian (शाकाहारी)</SelectItem>
+                              <SelectItem value="Non-Vegetarian (मांसाहारी)">Non-Vegetarian (मांसाहारी)</SelectItem>
+                              <SelectItem value="Vegan (वीगन)">Vegan (वीगन)</SelectItem>
+                              </SelectContent>
+                          </Select>
+                          <FormMessage />
+                          </FormItem>
+                      )}
                     />
                      <FormField
                         control={form.control}
@@ -560,5 +560,3 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
     </Card>
   );
 }
-
-    

@@ -1,20 +1,33 @@
 
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search } from 'lucide-react';
 
-const patients = [
-    { id: 'PID-001', name: 'Rohan Sharma', lastVisit: '2024-07-15', dosha: 'Pitta-Kapha' },
-    { id: 'PID-002', name: 'Priya Patel', lastVisit: '2024-07-12', dosha: 'Vata' },
-    { id: 'PID-003', name: 'Amit Singh', lastVisit: '2024-07-10', dosha: 'Kapha' },
-    { id: 'PID-004', name: 'Sunita Devi', lastVisit: '2024-07-08', dosha: 'Pitta' },
-];
+interface Patient {
+  id: string;
+  name: string;
+  lastVisit: string;
+  dosha: string;
+}
 
 export default function PatientHistoryPage() {
+  const [patients, setPatients] = useState<Patient[]>([]);
+
+  useEffect(() => {
+    // Check if window is defined (i.e., we are on the client side)
+    if (typeof window !== 'undefined') {
+      const storedPatients = localStorage.getItem('patients');
+      if (storedPatients) {
+        setPatients(JSON.parse(storedPatients));
+      }
+    }
+  }, []);
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
        <div className="flex items-center justify-between space-y-2">
@@ -43,17 +56,25 @@ export default function PatientHistoryPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {patients.map((patient) => (
-                <TableRow key={patient.id}>
-                  <TableCell>{patient.id}</TableCell>
-                  <TableCell className="font-medium">{patient.name}</TableCell>
-                  <TableCell>{patient.lastVisit}</TableCell>
-                  <TableCell>{patient.dosha}</TableCell>
-                  <TableCell>
-                    <Button variant="outline">View Details</Button>
+              {patients.length > 0 ? (
+                patients.map((patient) => (
+                  <TableRow key={patient.id}>
+                    <TableCell>{patient.id}</TableCell>
+                    <TableCell className="font-medium">{patient.name}</TableCell>
+                    <TableCell>{patient.lastVisit}</TableCell>
+                    <TableCell>{patient.dosha}</TableCell>
+                    <TableCell>
+                      <Button variant="outline">View Details</Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">
+                    No patient records found.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </CardContent>
