@@ -19,13 +19,12 @@ interface Patient {
 export default function PatientHistoryPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
   useEffect(() => {
-    // We are adding this key to the dependency array to force a re-render 
-    // when the user navigates back to this page.
-    const key = Math.random();
-
+    // This effect now correctly fetches data from localStorage on mount and when navigating.
+    // The component will re-render when you navigate back, triggering this effect.
     if (typeof window !== 'undefined') {
       const storedPatients = localStorage.getItem('patients');
       if (storedPatients) {
@@ -37,29 +36,42 @@ export default function PatientHistoryPage() {
   }, []);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = event.target.value.toLowerCase();
-    if (searchTerm) {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+    if (term) {
       const filtered = patients.filter(
         (patient) =>
-          patient.name.toLowerCase().includes(searchTerm) ||
-          patient.id.toLowerCase().includes(searchTerm)
+          patient.name.toLowerCase().includes(term) ||
+          patient.id.toLowerCase().includes(term)
       );
       setFilteredPatients(filtered);
     } else {
       setFilteredPatients(patients);
     }
   };
-
-  useEffect(() => {
+  
+  // A second useEffect to ensure that when navigating back to the page, it re-fetches the data.
+  // The router object itself doesn't change, but this pattern helps with re-renders on navigation.
+   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedPatients = localStorage.getItem('patients');
       if (storedPatients) {
         const parsedPatients = JSON.parse(storedPatients);
         setPatients(parsedPatients);
-        setFilteredPatients(parsedPatients);
+        if (searchTerm) {
+             const filtered = parsedPatients.filter(
+                (patient: Patient) =>
+                patient.name.toLowerCase().includes(searchTerm) ||
+                patient.id.toLowerCase().includes(searchTerm)
+            );
+            setFilteredPatients(filtered);
+        } else {
+            setFilteredPatients(parsedPatients);
+        }
       }
     }
-  }, [router]);
+  }, [router, searchTerm]);
+
 
   return (
     <div className="space-y-4">
@@ -108,7 +120,7 @@ export default function PatientHistoryPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center">
-                    No patient records found.
+                    No patient records found. Add a patient from the 'New Patient' page.
                   </TableCell>
                 </TableRow>
               )}
