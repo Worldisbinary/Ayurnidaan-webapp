@@ -14,7 +14,7 @@ export default function PremiumPage() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
             <Gem className="w-8 h-8 text-primary" />
-            <span>Unlock Premium Features</span>
+            <span>Special Price for BAMS Students</span>
         </h2>
         <Button variant="outline" onClick={() => router.back()}>
             <ChevronLeft className="mr-2 h-4 w-4" />
@@ -23,7 +23,7 @@ export default function PremiumPage() {
       </div>
       
       <p className="text-lg text-muted-foreground">
-        Upgrade to a Premium account to get exclusive access to advanced features, in-depth analytics, and priority support.
+        Unlock exclusive access to advanced diagnostic features, in-depth analytics, and priority support at a special price for students.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
@@ -32,7 +32,7 @@ export default function PremiumPage() {
             <CardTitle className="text-2xl font-headline">Monthly Plan</CardTitle>
             <CardDescription>Perfect for getting started</CardDescription>
             <div className="text-4xl font-bold my-4">
-              $29<span className="text-base font-normal text-muted-foreground">/month</span>
+              ₹3000<span className="text-base font-normal text-muted-foreground">/month</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -62,7 +62,7 @@ export default function PremiumPage() {
             <CardTitle className="text-2xl font-headline">Yearly Plan</CardTitle>
             <CardDescription>Save big with our annual plan</CardDescription>
              <div className="text-4xl font-bold my-4">
-              $299<span className="text-base font-normal text-muted-foreground">/year</span>
+              ₹28000<span className="text-base font-normal text-muted-foreground">/year</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -96,3 +96,4 @@ export default function PremiumPage() {
     </div>
   );
 }
+
