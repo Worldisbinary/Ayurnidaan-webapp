@@ -10,30 +10,36 @@ import { Label } from '@/components/ui/label';
 import { Leaf, User, Key, Phone, LogIn } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, type ConfirmationResult } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
 
+// Extend the Window interface to include recaptchaVerifier
+declare global {
+  interface Window {
+    recaptchaVerifier?: RecaptchaVerifier;
+    confirmationResult?: ConfirmationResult;
+  }
+}
 
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState<any>(null);
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const [otpSent, setOtpSent] = useState(false);
 
-  // Initialize reCAPTCHA
-  useEffect(() => {
-    if (typeof window !== 'undefined' && !window.recaptchaVerifier) {
+  const setupRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
         'size': 'invisible',
         'callback': (response: any) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          // reCAPTCHA solved.
         }
       });
     }
-  }, []);
-
+    return window.recaptchaVerifier;
+  };
 
   const handlePhoneLogin = async () => {
     if (phone.length !== 10) {
@@ -41,7 +47,7 @@ export default function LoginPage() {
         return;
     }
     try {
-        const appVerifier = window.recaptchaVerifier;
+        const appVerifier = setupRecaptcha();
         const formattedPhone = `+91${phone}`;
         const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
         setConfirmationResult(result);
@@ -54,6 +60,10 @@ export default function LoginPage() {
   };
 
   const handleVerifyOtp = async () => {
+    if (!confirmationResult) {
+        toast({ title: "Error", description: "Confirmation result not found. Please try sending OTP again.", variant: "destructive" });
+        return;
+    }
     if (otp.length !== 6) {
         toast({ title: "Error", description: "Please enter a valid 6-digit OTP.", variant: "destructive" });
         return;
@@ -168,5 +178,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    
