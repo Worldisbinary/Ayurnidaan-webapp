@@ -104,28 +104,28 @@ export default function DashboardLayout({
                 <SidebarMenuSub>
                   <SidebarMenuSubButton tooltip="Ayurvedic Texts">
                     <BookText />
-                    <span>आयुर्वेदिक ग्रंथ</span>
+                    <span>Ayurvedic Texts</span>
                   </SidebarMenuSubButton>
                   <SidebarMenuSubContent>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
                         onClick={() => router.push('/dashboard/texts/charaka-samhita') }
                       >
-                        चरक संहिता
+                        Charaka Samhita
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
                         onClick={() => router.push('/dashboard/texts/sushruta-samhita') }
                       >
-                        सुश्रुत संहिता
+                        Sushruta Samhita
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
                         onClick={() => router.push('/dashboard/texts/ashtanga-hridayam')}
                       >
-                        अष्टाङ्गहृदयम्
+                        Ashtanga Hridayam
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   </SidebarMenuSubContent>
