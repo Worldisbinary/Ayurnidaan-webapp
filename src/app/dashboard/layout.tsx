@@ -58,7 +58,7 @@ export default function DashboardLayout({
           <SidebarHeader>
               <div className="flex items-center gap-2">
                  <Leaf className="w-8 h-8 text-primary" />
-                 <h1 className="text-xl font-bold text-primary-foreground group-data-[collapsible=icon]:hidden">AyurNidaan</h1>
+                 <h1 className="text-xl font-bold text-primary-foreground group-data-[collapsible=icon]:hidden">Ayurnidaan</h1>
               </div>
           </SidebarHeader>
           <SidebarContent>
@@ -135,7 +135,7 @@ export default function DashboardLayout({
               <SidebarTrigger className="sm:hidden" />
               <div className="flex items-center gap-2">
                  <Leaf className="w-8 h-8 text-primary" />
-                 <h1 className="text-2xl font-bold text-primary-foreground">AyurNidaan</h1>
+                 <h1 className="text-2xl font-bold text-primary-foreground">Ayurnidaan</h1>
               </div>
               <div className="ml-auto flex items-center gap-4">
                 <Button variant="outline">
@@ -179,7 +179,7 @@ export default function DashboardLayout({
             </SidebarInset>
           </main>
            <footer className="text-center py-4 text-muted-foreground text-sm shrink-0 border-t">
-              © {new Date().getFullYear()} AyurNidaan. All rights reserved.
+              © {new Date().getFullYear()} Ayurnidaan. All rights reserved.
            </footer>
         </div>
       </div>
