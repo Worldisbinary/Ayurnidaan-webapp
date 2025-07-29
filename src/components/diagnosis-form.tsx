@@ -82,11 +82,45 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                 <FormField control={form.control} name="lifestyle" render={({ field }) => ( <FormItem> <FormLabel>Lifestyle</FormLabel> <FormControl> <Textarea placeholder="Describe diet, exercise, stress levels, etc." {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
               </CardContent>
             </Card>
-
-            <FormField control={form.control} name="medicalHistory" render={({ field }) => ( <FormItem> <FormLabel className="text-xl font-headline">Medical History</FormLabel> <FormControl> <Textarea rows={4} placeholder="Previous illnesses, treatments, allergies..." {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-            <FormField control={form.control} name="symptoms" render={({ field }) => ( <FormItem> <FormLabel className="text-xl font-headline">Symptom Record</FormLabel> <FormControl> <Textarea rows={6} placeholder="Digestive, respiratory, skin, mental state..." {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-            <FormField control={form.control} name="physicalObservations" render={({ field }) => ( <FormItem> <FormLabel className="text-xl font-headline">Physical Observations</FormLabel> <FormControl> <Textarea rows={4} placeholder="Describe tongue, nails, skin, eyes..." {...field} /> </FormControl> <FormMessage /> </FormItem> )} />
-            
+            <FormField
+              control={form.control}
+              name="medicalHistory"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xl font-headline">Medical History</FormLabel>
+                  <FormControl>
+                    <Textarea rows={4} placeholder="Previous illnesses, treatments, allergies..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="symptoms"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xl font-headline">Symptom Record</FormLabel>
+                  <FormControl>
+                    <Textarea rows={6} placeholder="Digestive, respiratory, skin, mental state..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="physicalObservations"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xl font-headline">Physical Observations</FormLabel>
+                  <FormControl>
+                    <Textarea rows={4} placeholder="Describe tongue, nails, skin, eyes..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" disabled={isLoading} className="w-full text-lg py-6">
               {isLoading ? (
                 <>

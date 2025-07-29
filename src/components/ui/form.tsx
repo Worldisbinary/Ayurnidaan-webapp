@@ -108,6 +108,7 @@ const FormControl = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Slot>
 >(({ ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+  const child = React.Children.only(props.children)
 
   return (
     <Slot
@@ -120,7 +121,9 @@ const FormControl = React.forwardRef<
       }
       aria-invalid={!!error}
       {...props}
-    />
+    >
+      {React.cloneElement(child, { ...props, ...child.props })}
+    </Slot>
   )
 })
 FormControl.displayName = "FormControl"
