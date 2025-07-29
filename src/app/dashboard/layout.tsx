@@ -137,6 +137,10 @@ export default function DashboardLayout({
                  <h1 className="text-2xl font-bold text-primary-foreground">AyurNidaan</h1>
               </div>
               <div className="ml-auto flex items-center gap-4">
+                <Button variant="outline">
+                   <Gem className="mr-2 h-4 w-4" />
+                   Premium
+                </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -158,10 +162,6 @@ export default function DashboardLayout({
                     <DropdownMenuItem>
                       <User className="mr-2 h-4 w-4" />
                       Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Gem className="mr-2 h-4 w-4" />
-                      Premium
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>
