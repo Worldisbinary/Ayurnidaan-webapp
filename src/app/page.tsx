@@ -30,15 +30,18 @@ export default function SplashScreen() {
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="flex items-center gap-2 md:gap-4">
-        <Leaf className="w-12 h-12 md:w-16 md:h-16 text-primary animate-pulse" />
-        <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary-foreground text-center">
-          Ayurnidaan
-        </h1>
+      <div className="flex flex-col items-center justify-center flex-grow-[2]">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Leaf className="w-12 h-12 md:w-16 md:h-16 text-primary animate-pulse" />
+          <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary-foreground text-center">
+            Ayurnidaan
+          </h1>
+        </div>
+        <p className="text-muted-foreground mt-4 text-center">
+          AI-Assisted Ayurvedic Diagnosis
+        </p>
       </div>
-      <p className="text-muted-foreground mt-4 text-center">
-        AI-Assisted Ayurvedic Diagnosis
-      </p>
+      <div className="flex-grow-[1]"></div>
     </div>
   );
 }
