@@ -130,7 +130,7 @@ export default function DashboardLayout({
           </SidebarContent>
         </Sidebar>
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <header className="sticky top-0 z-10 flex items-center gap-4 border-b bg-background px-4 py-2 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
               <SidebarTrigger className="sm:hidden" />
               <div className="flex items-center gap-2">
                  <Leaf className="w-8 h-8 text-primary" />
