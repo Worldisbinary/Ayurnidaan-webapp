@@ -71,20 +71,20 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
       diet: "vegetarian",
       visitDate: new Date(),
       location: "",
-      mal: "Normal",
-      mutra: "Normal",
-      kshudha: "Normal",
-      trishna: "Normal",
-      nidra: "Normal",
-      jivha: "Niram (Clear)",
-      manoSwabhav: "Calm",
+      mal: "Normal (सामान्य)",
+      mutra: "Normal (सामान्य)",
+      kshudha: "Normal (सामान्य)",
+      trishna: "Normal (सामान्य)",
+      nidra: "Normal (सामान्य)",
+      jivha: "Niram (Clear) (निराम)",
+      manoSwabhav: "Calm (शांत)",
       otherComplaints: "",
-      arsh: "No",
-      ashmari: "No",
-      kushtha: "No",
-      prameha: "No",
-      grahani: "No",
-      shotha: "No",
+      arsh: "No (नहीं)",
+      ashmari: "No (नहीं)",
+      kushtha: "No (नहीं)",
+      prameha: "No (नहीं)",
+      grahani: "No (नहीं)",
+      shotha: "No (नहीं)",
     },
   });
 
@@ -281,9 +281,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Normal">Normal</SelectItem>
-                              <SelectItem value="Vibandh (Constipation)">Vibandh (Constipation)</SelectItem>
-                              <SelectItem value="Atisar (Diarrhea)">Atisar (Diarrhea)</SelectItem>
+                              <SelectItem value="Normal (सामान्य)">Normal (सामान्य)</SelectItem>
+                              <SelectItem value="Vibandh (Constipation) (विबंध (कब्ज))">Vibandh (Constipation) (विबंध (कब्ज))</SelectItem>
+                              <SelectItem value="Atisar (Diarrhea) (अतिसार (दस्त))">Atisar (Diarrhea) (अतिसार (दस्त))</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -301,9 +301,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Normal">Normal</SelectItem>
-                              <SelectItem value="Dah Yukt (Burning)">Dah Yukt (Burning)</SelectItem>
-                              <SelectItem value="Rakt Yukt (With Blood)">Rakt Yukt (With Blood)</SelectItem>
+                              <SelectItem value="Normal (सामान्य)">Normal (सामान्य)</SelectItem>
+                              <SelectItem value="Dah Yukt (Burning) (दाह युक्त)">Dah Yukt (Burning) (दाह युक्त)</SelectItem>
+                              <SelectItem value="Rakt Yukt (With Blood) (रक्त युक्त)">Rakt Yukt (With Blood) (रक्त युक्त)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -321,9 +321,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Normal">Normal</SelectItem>
-                              <SelectItem value="Decreased">Decreased</SelectItem>
-                              <SelectItem value="Increased">Increased</SelectItem>
+                              <SelectItem value="Normal (सामान्य)">Normal (सामान्य)</SelectItem>
+                              <SelectItem value="Decreased (कम हुई)">Decreased (कम हुई)</SelectItem>
+                              <SelectItem value="Increased (बढ़ी हुई)">Increased (बढ़ी हुई)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -341,9 +341,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Normal">Normal</SelectItem>
-                              <SelectItem value="Decreased">Decreased</SelectItem>
-                              <SelectItem value="Increased">Increased</SelectItem>
+                              <SelectItem value="Normal (सामान्य)">Normal (सामान्य)</SelectItem>
+                              <SelectItem value="Decreased (कम हुई)">Decreased (कम हुई)</SelectItem>
+                              <SelectItem value="Increased (बढ़ी हुई)">Increased (बढ़ी हुई)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -361,9 +361,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Normal">Normal</SelectItem>
-                              <SelectItem value="Khandit (Disturbed)">Khandit (Disturbed)</SelectItem>
-                              <SelectItem value="Anidra (Sleeplessness)">Anidra (Sleeplessness)</SelectItem>
+                              <SelectItem value="Normal (सामान्य)">Normal (सामान्य)</SelectItem>
+                              <SelectItem value="Khandit (Disturbed) (खंडित)">Khandit (Disturbed) (खंडित)</SelectItem>
+                              <SelectItem value="Anidra (Sleeplessness) (अनिद्रा)">Anidra (Sleeplessness) (अनिद्रा)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -381,8 +381,8 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Niram (Clear)">Niram (Clear)</SelectItem>
-                              <SelectItem value="Saam (Coated)">Saam (Coated)</SelectItem>
+                              <SelectItem value="Niram (Clear) (निराम)">Niram (Clear) (निराम)</SelectItem>
+                              <SelectItem value="Saam (Coated) (साम)">Saam (Coated) (साम)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -400,9 +400,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Calm">Calm</SelectItem>
-                              <SelectItem value="Chidchida (Irritable)">Chidchida (Irritable)</SelectItem>
-                              <SelectItem value="Udaseen (Depressed)">Udaseen (Depressed)</SelectItem>
+                              <SelectItem value="Calm (शांत)">Calm (शांत)</SelectItem>
+                              <SelectItem value="Chidchida (Irritable) (चिड़चिड़ा)">Chidchida (Irritable) (चिड़चिड़ा)</SelectItem>
+                              <SelectItem value="Udaseen (Depressed) (उदासीन)">Udaseen (Depressed) (उदासीन)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -420,9 +420,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="No">No</SelectItem>
-                              <SelectItem value="Yes, Dry">Yes, Dry</SelectItem>
-                              <SelectItem value="Yes, Bleeding">Yes, Bleeding</SelectItem>
+                              <SelectItem value="No (नहीं)">No (नहीं)</SelectItem>
+                              <SelectItem value="Yes, Dry (हाँ, शुष्क)">Yes, Dry (हाँ, शुष्क)</SelectItem>
+                              <SelectItem value="Yes, Bleeding (हाँ, रक्तस्रावी)">Yes, Bleeding (हाँ, रक्तस्रावी)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -440,9 +440,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="No">No</SelectItem>
-                              <SelectItem value="Yes, with Pain">Yes, with Pain</SelectItem>
-                              <SelectItem value="Yes, History">Yes, History</SelectItem>
+                              <SelectItem value="No (नहीं)">No (नहीं)</SelectItem>
+                              <SelectItem value="Yes, with Pain (हाँ, दर्द के साथ)">Yes, with Pain (हाँ, दर्द के साथ)</SelectItem>
+                              <SelectItem value="Yes, History (हाँ, पुराना इतिहास)">Yes, History (हाँ, पुराना इतिहास)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -460,10 +460,10 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="No">No</SelectItem>
-                              <SelectItem value="Dry Eczema">Dry Eczema</SelectItem>
-                              <SelectItem value="Psoriasis">Psoriasis</SelectItem>
-                              <SelectItem value="Acne/Pimples">Acne/Pimples</SelectItem>
+                              <SelectItem value="No (नहीं)">No (नहीं)</SelectItem>
+                              <SelectItem value="Dry Eczema (शुष्क एक्जिमा)">Dry Eczema (शुष्क एक्जिमा)</SelectItem>
+                              <SelectItem value="Psoriasis (सोरायसिस)">Psoriasis (सोरायसिस)</SelectItem>
+                              <SelectItem value="Acne/Pimples (मुंहासे)">Acne/Pimples (मुंहासे)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -481,9 +481,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="No">No</SelectItem>
-                              <SelectItem value="Increased Frequency">Increased Frequency</SelectItem>
-                              <SelectItem value="Family History">Family History</SelectItem>
+                              <SelectItem value="No (नहीं)">No (नहीं)</SelectItem>
+                              <SelectItem value="Increased Frequency (बार-बार पेशाब आना)">Increased Frequency (बार-बार पेशाब आना)</SelectItem>
+                              <SelectItem value="Family History (पारिवारिक इतिहास)">Family History (पारिवारिक इतिहास)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -501,9 +501,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="No">No</SelectItem>
-                              <SelectItem value="IBS">IBS</SelectItem>
-                              <SelectItem value="Indigestion">Indigestion</SelectItem>
+                              <SelectItem value="No (नहीं)">No (नहीं)</SelectItem>
+                              <SelectItem value="IBS (आईबीएस)">IBS (आईबीएस)</SelectItem>
+                              <SelectItem value="Indigestion (अपच)">Indigestion (अपच)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -521,9 +521,9 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
                               <SelectTrigger><SelectValue /></SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="No">No</SelectItem>
-                              <SelectItem value="Localized">Localized</SelectItem>
-                              <SelectItem value="Generalized">Generalized</SelectItem>
+                              <SelectItem value="No (नहीं)">No (नहीं)</SelectItem>
+                              <SelectItem value="Localized (स्थानीय)">Localized (स्थानीय)</SelectItem>
+                              <SelectItem value="Generalized (व्यापक)">Generalized (व्यापक)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -560,3 +560,5 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
     </Card>
   );
 }
+
+    
