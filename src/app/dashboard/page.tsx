@@ -1,108 +1,69 @@
 
 'use client';
 
-import { useState } from 'react';
-import type { SuggestDiagnosesOutput, SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
-import { Leaf, UserPlus, Users, LogOut } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
-import { getDiagnosis } from '@/app/actions';
-import { DiagnosisForm } from '@/components/diagnosis-form';
-import { DiagnosisResults } from '@/components/diagnosis-results';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
-function RegisteredPatientsTab() {
-  // Placeholder for registered patients list
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Registered Patients</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p>A list of registered patients will be displayed here in the future.</p>
-        {/* Example patient list item */}
-        <div className="flex items-center justify-between p-4 mt-4 border rounded-lg">
-          <div>
-            <p className="font-semibold">John Doe</p>
-            <p className="text-sm text-muted-foreground">Last visit: 2024-07-20</p>
-          </div>
-          <Button variant="outline">View Details</Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+const articles = [
+  {
+    title: 'Understanding Your Dosha',
+    description: 'Learn about the three doshas (Vata, Pitta, Kapha) and how they influence your physical and mental well-being.',
+    image: {
+      src: 'https://placehold.co/600x400.png',
+      hint: 'nature meditation'
+    }
+  },
+  {
+    title: 'The Principles of Ayurvedic Diet',
+    description: 'Discover how to eat according to your dosha to improve digestion, boost immunity, and maintain balance.',
+    image: {
+      src: 'https://placehold.co/600x400.png',
+      hint: 'healthy food'
+    }
+  },
+  {
+    title: 'Daily Rituals for a Balanced Life',
+    description: 'Explore the practice of Dinacharya (daily routine) to align your body with the rhythms of nature.',
+    image: {
+      src: 'https://placehold.co/600x400.png',
+      hint: 'yoga sunrise'
+    }
+  },
+   {
+    title: 'Herbs for Holistic Healing',
+    description: 'An introduction to common Ayurvedic herbs like Ashwagandha, Turmeric, and Triphala and their benefits.',
+    image: {
+      src: 'https://placehold.co/600x400.png',
+      hint: 'herbs spices'
+    }
+  },
+];
 
 export default function DashboardPage() {
-  const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
-  const router = useRouter();
-
-  const handleDiagnosis = async (data: SuggestDiagnosesInput) => {
-    setIsLoading(true);
-    setResult(null);
-    try {
-      const diagnosisResult = await getDiagnosis(data);
-      setResult(diagnosisResult);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: (error as Error).message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const handleLogout = () => {
-    router.push('/login');
-  };
-
-
   return (
-    <div className="min-h-screen bg-background text-foreground font-body flex flex-col">
-      <header className="py-4 shrink-0 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-           <div className="flex items-center gap-3">
-             <Leaf className="w-8 h-8 text-primary" />
-             <h1 className="text-3xl font-headline font-bold text-primary-foreground">AyurNidaan Dashboard</h1>
-           </div>
-           <Button variant="ghost" onClick={handleLogout}>
-             <LogOut className="mr-2 h-5 w-5" />
-             Logout
-           </Button>
-        </div>
-      </header>
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultValue="new-patient">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="new-patient">
-              <UserPlus className="mr-2" /> New Patient Entry
-            </TabsTrigger>
-            <TabsTrigger value="registered-patients">
-              <Users className="mr-2" /> Registered Patients
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="new-patient">
-             <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 gap-8 mt-6">
-                <DiagnosisForm onDiagnose={handleDiagnosis} isLoading={isLoading} />
-                <div className="space-y-8">
-                  <DiagnosisResults result={result} isLoading={isLoading} />
-                </div>
-              </div>
-          </TabsContent>
-          <TabsContent value="registered-patients">
-            <RegisteredPatientsTab />
-          </TabsContent>
-        </Tabs>
-      </main>
-      <footer className="text-center py-4 text-muted-foreground text-sm shrink-0 border-t">
-        © {new Date().getFullYear()} AyurNidaan. All rights reserved.
-      </footer>
+    <div className="flex-1 space-y-8 p-4 md:p-8">
+       <h2 className="text-3xl font-bold tracking-tight">Ayurvedic Insights</h2>
+       <p className="text-muted-foreground">Explore articles and information on Ayurvedic principles and practices.</p>
+       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+        {articles.map((article) => (
+          <Card key={article.title}>
+            <CardHeader className="p-0">
+               <Image 
+                src={article.image.src} 
+                alt={article.title}
+                data-ai-hint={article.image.hint}
+                width={600}
+                height={400}
+                className="rounded-t-lg object-cover"
+              />
+            </CardHeader>
+            <CardContent className="p-6">
+              <CardTitle className="text-xl font-headline mb-2">{article.title}</CardTitle>
+              <p className="text-muted-foreground">{article.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+       </div>
     </div>
   );
 }
