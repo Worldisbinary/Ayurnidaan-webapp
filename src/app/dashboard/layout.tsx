@@ -143,7 +143,7 @@ export default function DashboardLayout({
         </Sheet>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <div className="ml-auto flex-1 sm:flex-initial">
-             <Button variant="outline" onClick={() => router.push('/dashboard/premium')}>
+             <Button variant="outline" onClick={() => router.push('/dashboard/premium/payment?plan=monthly')}>
                    <Gem className="mr-2 h-4 w-4" />
                    Premium
             </Button>
