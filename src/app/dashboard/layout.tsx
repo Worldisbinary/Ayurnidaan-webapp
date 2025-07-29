@@ -53,7 +53,7 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
-        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 md:flex-nowrap">
           <Link
             href="/dashboard"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
@@ -65,14 +65,14 @@ export default function DashboardLayout({
              <Link
               key={link.href}
               href={link.href}
-              className={`transition-colors hover:text-foreground ${isActive(link.href) ? 'text-foreground' : 'text-muted-foreground'}`}
+              className={`transition-colors hover:text-foreground whitespace-nowrap ${isActive(link.href) ? 'text-foreground' : 'text-muted-foreground'}`}
             >
               {link.label}
             </Link>
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-               <Button variant="link" className={`transition-colors hover:text-foreground p-0 h-auto ${pathname.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
+               <Button variant="link" className={`transition-colors hover:text-foreground p-0 h-auto whitespace-nowrap ${pathname.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
                 Ayurvedic Texts
               </Button>
             </DropdownMenuTrigger>
