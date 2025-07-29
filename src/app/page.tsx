@@ -26,15 +26,19 @@ export default function SplashScreen() {
 
   return (
     <div
-      className={`min-h-screen bg-background flex flex-col items-center justify-center transition-opacity duration-500 ${
+      className={`min-h-screen bg-background flex flex-col items-center justify-center transition-opacity duration-500 p-4 ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="flex items-center gap-4">
-        <Leaf className="w-16 h-16 text-primary animate-pulse" />
-        <h1 className="text-6xl font-headline font-bold text-primary-foreground">Ayurnidaan</h1>
+      <div className="flex items-center gap-2 md:gap-4">
+        <Leaf className="w-12 h-12 md:w-16 md:h-16 text-primary animate-pulse" />
+        <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary-foreground text-center">
+          Ayurnidaan
+        </h1>
       </div>
-      <p className="text-muted-foreground mt-4">AI-Assisted Ayurvedic Diagnosis</p>
+      <p className="text-muted-foreground mt-4 text-center">
+        AI-Assisted Ayurvedic Diagnosis
+      </p>
     </div>
   );
 }

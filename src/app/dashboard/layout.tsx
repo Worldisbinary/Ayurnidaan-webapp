@@ -85,8 +85,8 @@ export default function DashboardLayout({
   const bottomNavLinks = [
     { href: '/dashboard', icon: <Home className="h-6 w-6" />, label: 'Home' },
     { href: '/dashboard/new-patient', icon: <PlusCircle className="h-6 w-6" />, label: 'New Patient' },
-    { href: '/dashboard/patient-history', icon: <History className="h-6 w-6" />, label: 'History' },
-    { href: '/dashboard/profile', icon: <User className="h-6 w-6" />, label: 'Profile' },
+    { href: '/dashboard/patient-history', icon: <History className="h-6 w-6" />, label: 'Past Patients' },
+    { href: '/dashboard/profile', icon: <User className="h-6 w-6" />, label: 'You' },
   ]
 
   const textLinks = [
