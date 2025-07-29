@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import type { SuggestDiagnosesOutput, SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { useToast } from "@/hooks/use-toast";
@@ -17,13 +17,15 @@ export default function NewPatientPage() {
   const [result, setResult] = useState<SuggestDiagnosesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentFormData, setCurrentFormData] = useState<DiagnosisFormValues | null>(null);
+  const [isFormValid, setIsFormValid] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
+  // Use an effect to track form data changes
   const handleFormChange = (data: DiagnosisFormValues) => {
     setCurrentFormData(data);
-  }
-
+  };
+  
   const handleDiagnosis = async () => {
     if (!currentFormData) {
        toast({
@@ -78,9 +80,9 @@ export default function NewPatientPage() {
       id: uuidv4(),
       name: currentFormData.name,
       lastVisit: currentFormData.visitDate.toISOString().split('T')[0],
-      dosha: result?.potentialImbalances || 'N/A',
+      dosha: result?.potentialImbalances || 'N/A', // Save diagnosis if available
       ...currentFormData,
-      diagnosis: result,
+      diagnosis: result, // Save the full diagnosis object
     };
 
     try {

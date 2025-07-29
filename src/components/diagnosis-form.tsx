@@ -93,10 +93,21 @@ export function DiagnosisForm({ onFormChange, onDiagnose, onSave, isLoading }: D
   const watchedValues = useWatch({ control: form.control });
 
   useEffect(() => {
-    if (form.formState.isDirty) {
-      onFormChange(watchedValues as DiagnosisFormValues);
-    }
-  }, [watchedValues, onFormChange, form.formState.isDirty]);
+    // This will now correctly fire on any form value change.
+    const subscription = form.watch((values) => {
+        onFormChange(values as DiagnosisFormValues);
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch, onFormChange]);
+
+
+  const handleDiagnoseClick = () => {
+     form.trigger().then(isValid => {
+        if(isValid) {
+            onDiagnose();
+        }
+    });
+  }
 
   const handleSaveClick = () => {
     form.trigger().then(isValid => {
@@ -561,15 +572,15 @@ export function DiagnosisForm({ onFormChange, onDiagnose, onSave, isLoading }: D
             </Card>
 
             <div className="flex flex-col md:flex-row gap-4">
-                 <Button type="button" onClick={handleSaveClick} disabled={isLoading} className="w-full text-lg py-6">
+                <Button type="button" onClick={handleSaveClick} className="w-full text-lg py-6">
                     <Save className="mr-2" />
                     Save Patient
                 </Button>
                 <Button 
                     type="button" 
                     variant="outline"
-                    onClick={onDiagnose}
-                    disabled={isLoading || !form.formState.isValid}
+                    onClick={handleDiagnoseClick}
+                    disabled={isLoading}
                     className="w-full text-lg py-6"
                 >
                     {isLoading ? (
