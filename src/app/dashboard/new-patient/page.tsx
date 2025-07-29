@@ -72,6 +72,7 @@ export default function NewPatientPage() {
             title: "Patient Saved",
             description: `${formData.name} has been added to the patient list.`,
         });
+        router.push('/dashboard/patient-history');
     }
   };
 
