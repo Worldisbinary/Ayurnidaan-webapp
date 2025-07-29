@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function DashboardLayout({
   children,
@@ -33,8 +34,13 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [activePath, setActivePath] = useState('');
 
-  const isActive = (path: string) => pathname === path;
+  useEffect(() => {
+    setActivePath(pathname);
+  }, [pathname]);
+
+  const isActive = (path: string) => activePath === path;
 
   const navLinks = [
     { href: '/dashboard', icon: <Home className="h-5 w-5" />, label: 'Home' },
@@ -72,7 +78,7 @@ export default function DashboardLayout({
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-               <Button variant="link" className={`transition-colors hover:text-foreground p-0 h-auto whitespace-nowrap ${pathname.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
+               <Button variant="link" className={`transition-colors hover:text-foreground p-0 h-auto whitespace-nowrap ${activePath.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
                 Ayurvedic Texts
               </Button>
             </DropdownMenuTrigger>
@@ -121,7 +127,7 @@ export default function DashboardLayout({
               ))}
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className={`justify-start items-center gap-4 transition-colors hover:text-foreground p-0 h-auto font-medium ${pathname.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  <Button variant="ghost" className={`justify-start items-center gap-4 transition-colors hover:text-foreground p-0 h-auto font-medium ${activePath.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground'}`}>
                      <BookText className="h-5 w-5" />
                       Ayurvedic Texts
                   </Button>
