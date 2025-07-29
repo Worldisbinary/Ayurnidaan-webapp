@@ -699,6 +699,26 @@ const SidebarMenuSub = React.forwardRef<
 ))
 SidebarMenuSub.displayName = "SidebarMenuSub"
 
+const SidebarMenuSubContent = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div">
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-sidebar="menu-sub-content"
+      className={cn(
+        "pl-4",
+        "group-data-[collapsible=icon]:hidden",
+        className
+      )}
+      {...props}
+    />
+  )
+})
+SidebarMenuSubContent.displayName = "SidebarMenuSubContent"
+
+
 const SidebarMenuSubItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<"li">
@@ -760,4 +780,7 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar,
+  SidebarMenuSubContent,
 }
+
+    
