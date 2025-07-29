@@ -30,13 +30,14 @@ export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false);
 
   const setupRecaptcha = () => {
+    // Only initialize if it hasn't been already
     if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': (response: any) => {
-          // reCAPTCHA solved.
-        }
-      });
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response: any) => {
+              // reCAPTCHA solved.
+            }
+        });
     }
     return window.recaptchaVerifier;
   };
@@ -102,12 +103,12 @@ export default function LoginPage() {
             <Leaf className="w-10 h-10 text-primary" />
             <h1 className="text-4xl font-headline font-bold text-primary-foreground">Ayurnidaan</h1>
           </div>
-          <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>
-          <CardDescription>Sign in or continue as a guest.</CardDescription>
+          <CardTitle className="text-2xl font-headline">Explore the App</CardTitle>
+          <CardDescription>To see the full application, please continue as a guest.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
-            <Button variant="secondary" className="w-full text-lg py-6" onClick={handleGuestLogin}>
+            <Button className="w-full text-lg py-6" onClick={handleGuestLogin}>
                 <User className="mr-2" />
                 Continue as Guest
             </Button>
@@ -136,7 +137,7 @@ export default function LoginPage() {
                     onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
-                <Button onClick={handlePhoneLogin} className="w-full text-lg py-6">
+                <Button variant="secondary" onClick={handlePhoneLogin} className="w-full text-lg py-6">
                   <LogIn className="mr-2" />
                   Send OTP
                 </Button>
@@ -154,7 +155,7 @@ export default function LoginPage() {
                         onChange={(e) => setOtp(e.target.value)}
                     />
                 </div>
-                <Button onClick={handleVerifyOtp} className="w-full text-lg py-6">
+                <Button variant="secondary" onClick={handleVerifyOtp} className="w-full text-lg py-6">
                   Verify OTP & Sign In
                 </Button>
               </>
