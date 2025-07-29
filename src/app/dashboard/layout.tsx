@@ -142,7 +142,7 @@ export default function DashboardLayout({
                  <h1 className="text-2xl font-bold text-primary-foreground">Ayurnidaan</h1>
               </div>
               <div className="ml-auto flex items-center gap-4">
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => router.push('/dashboard/premium')}>
                    <Gem className="mr-2 h-4 w-4" />
                    Premium
                 </Button>
