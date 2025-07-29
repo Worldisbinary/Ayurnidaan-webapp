@@ -30,7 +30,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-3 mb-4">
             <Leaf className="w-10 h-10 text-primary" />
-            <h1 className="text-4xl font-headline font-bold text-primary-foreground">AyurVision</h1>
+            <h1 className="text-4xl font-headline font-bold text-primary-foreground">AyurNidaan</h1>
           </div>
           <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>
           <CardDescription>Sign in to continue to your dashboard.</CardDescription>
@@ -76,7 +76,7 @@ export default function LoginPage() {
         </CardContent>
       </Card>
       <footer className="text-center py-4 text-muted-foreground text-sm mt-8">
-        © {new Date().getFullYear()} AyurVision. All rights reserved.
+        © {new Date().getFullYear()} AyurNidaan. All rights reserved.
       </footer>
     </div>
   );

@@ -32,7 +32,7 @@ export default function SplashScreen() {
     >
       <div className="flex items-center gap-4">
         <Leaf className="w-16 h-16 text-primary animate-pulse" />
-        <h1 className="text-6xl font-headline font-bold text-primary-foreground">AyurVision</h1>
+        <h1 className="text-6xl font-headline font-bold text-primary-foreground">AyurNidaan</h1>
       </div>
       <p className="text-muted-foreground mt-4">AI-Assisted Ayurvedic Diagnosis</p>
     </div>

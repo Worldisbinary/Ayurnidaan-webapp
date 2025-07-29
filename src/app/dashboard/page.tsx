@@ -69,7 +69,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
            <div className="flex items-center gap-3">
              <Leaf className="w-8 h-8 text-primary" />
-             <h1 className="text-3xl font-headline font-bold text-primary-foreground">AyurVision Dashboard</h1>
+             <h1 className="text-3xl font-headline font-bold text-primary-foreground">AyurNidaan Dashboard</h1>
            </div>
            <Button variant="ghost" onClick={handleLogout}>
              <LogOut className="mr-2 h-5 w-5" />
@@ -101,7 +101,7 @@ export default function DashboardPage() {
         </Tabs>
       </main>
       <footer className="text-center py-4 text-muted-foreground text-sm shrink-0 border-t">
-        © {new Date().getFullYear()} AyurVision. All rights reserved.
+        © {new Date().getFullYear()} AyurNidaan. All rights reserved.
       </footer>
     </div>
   );
