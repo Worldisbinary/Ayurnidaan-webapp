@@ -9,6 +9,10 @@ import { CheckCircle, ChevronLeft, Gem } from 'lucide-react';
 export default function PremiumPage() {
   const router = useRouter();
 
+  const handleChoosePlan = (plan: string) => {
+    router.push(`/dashboard/premium/payment?plan=${plan}`);
+  };
+
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
@@ -50,7 +54,7 @@ export default function PremiumPage() {
                 <span>Email Support</span>
               </li>
             </ul>
-            <Button className="w-full text-lg py-6 mt-4">Choose Monthly</Button>
+            <Button className="w-full text-lg py-6 mt-4" onClick={() => handleChoosePlan('monthly')}>Choose Monthly</Button>
           </CardContent>
         </Card>
         
@@ -84,7 +88,7 @@ export default function PremiumPage() {
                 <span>Access to Beta Features</span>
               </li>
             </ul>
-            <Button className="w-full text-lg py-6 mt-4">Choose Yearly</Button>
+            <Button className="w-full text-lg py-6 mt-4" onClick={() => handleChoosePlan('yearly')}>Choose Yearly</Button>
           </CardContent>
         </Card>
       </div>
