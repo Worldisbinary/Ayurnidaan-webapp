@@ -34,8 +34,10 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8">
-       <h2 className="text-3xl font-bold tracking-tight">Ayurvedic Insights</h2>
-       <p className="text-muted-foreground">Explore the latest articles, news, and research on Ayurvedic principles and practices.</p>
+       <div className="space-y-2">
+         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+         <p className="text-muted-foreground">Explore the latest articles and insights in Ayurveda.</p>
+       </div>
 
       {isLoading && (
          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">

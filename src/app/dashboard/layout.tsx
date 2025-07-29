@@ -36,10 +36,11 @@ import {
   Gem,
   PlusCircle,
   Pill,
-  Package
+  Package,
+  Home
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function DashboardLayout({
   children,
@@ -47,10 +48,13 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     router.push('/login');
   };
+  
+  const isActive = (path: string) => pathname === path;
 
   return (
     <SidebarProvider>
@@ -64,9 +68,20 @@ export default function DashboardLayout({
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
+                <SidebarMenuItem>
+                 <SidebarMenuButton 
+                    tooltip="Dashboard" 
+                    isActive={isActive('/dashboard')}
+                    onClick={() => router.push('/dashboard')}
+                  >
+                   <Home />
+                   <span>Dashboard</span>
+                 </SidebarMenuButton>
+              </SidebarMenuItem>
                <SidebarMenuItem>
                  <SidebarMenuButton 
                     tooltip="New Patient" 
+                    isActive={isActive('/dashboard/new-patient')}
                     onClick={() => router.push('/dashboard/new-patient')}
                   >
                    <PlusCircle />
@@ -76,6 +91,7 @@ export default function DashboardLayout({
               <SidebarMenuItem>
                  <SidebarMenuButton 
                     tooltip="Past Patients"
+                    isActive={isActive('/dashboard/patient-history')}
                     onClick={() => router.push('/dashboard/patient-history')}
                   >
                    <History />
@@ -85,6 +101,7 @@ export default function DashboardLayout({
                <SidebarMenuItem>
                  <SidebarMenuButton 
                     tooltip="Medicines"
+                    isActive={isActive('/dashboard/medicines')}
                     onClick={() => router.push('/dashboard/medicines')}
                   >
                    <Pill />
@@ -94,6 +111,7 @@ export default function DashboardLayout({
               <SidebarMenuItem>
                  <SidebarMenuButton 
                     tooltip="Supplements"
+                    isActive={isActive('/dashboard/supplements')}
                     onClick={() => router.push('/dashboard/supplements')}
                   >
                    <Package />
@@ -109,6 +127,7 @@ export default function DashboardLayout({
                   <SidebarMenuSubContent>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
+                        isActive={isActive('/dashboard/texts/charaka-samhita')}
                         onClick={() => router.push('/dashboard/texts/charaka-samhita') }
                       >
                         Charaka Samhita
@@ -116,6 +135,7 @@ export default function DashboardLayout({
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
+                        isActive={isActive('/dashboard/texts/sushruta-samhita')}
                         onClick={() => router.push('/dashboard/texts/sushruta-samhita') }
                       >
                         Sushruta Samhita
@@ -123,6 +143,7 @@ export default function DashboardLayout({
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton
+                         isActive={isActive('/dashboard/texts/ashtanga-hridayam')}
                         onClick={() => router.push('/dashboard/texts/ashtanga-hridayam')}
                       >
                         Ashtanga Hridayam
@@ -137,7 +158,7 @@ export default function DashboardLayout({
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex items-center gap-4 border-b bg-background px-4 py-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
               <SidebarTrigger className="sm:hidden" />
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 md:hidden">
                  <Leaf className="w-8 h-8 text-primary" />
                  <h1 className="text-2xl font-bold text-primary-foreground">Ayurnidaan</h1>
               </div>
