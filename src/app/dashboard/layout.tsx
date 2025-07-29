@@ -34,27 +34,30 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [activePath, setActivePath] = useState(pathname);
   const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setActivePath(pathname);
-  }, [pathname]);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   const getLinkClass = (path: string) => {
-    if (!isClient) return 'text-muted-foreground px-3 py-1'; // Default server-side class
-    return activePath === path 
+    // On the server or before hydration, return a default class
+    if (!isClient) {
+      return 'text-muted-foreground px-3 py-1';
+    }
+    // On the client, determine the class based on the current path
+    const isActive = pathname === path;
+    return isActive
       ? 'bg-primary/10 text-primary rounded-full px-3 py-1' 
       : 'text-muted-foreground px-3 py-1';
   };
 
   const getDropdownClass = () => {
-    if (!isClient) return 'text-muted-foreground'; // Default server-side class
-    return activePath.startsWith('/dashboard/texts') ? 'text-foreground' : 'text-muted-foreground';
+     if (!isClient) {
+      return 'text-muted-foreground';
+    }
+    const isActive = pathname.startsWith('/dashboard/texts');
+    return isActive ? 'text-foreground' : 'text-muted-foreground';
   }
 
   const navLinks = [
@@ -164,7 +167,7 @@ export default function DashboardLayout({
         </Sheet>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <div className="ml-auto flex-1 sm:flex-initial">
-             <Button variant="outline" onClick={() => router.push('/dashboard/premium/payment?plan=monthly')}>
+             <Button variant="outline" onClick={() => router.push('/dashboard/premium')}>
                    <Gem className="mr-2 h-4 w-4" />
                    Premium
             </Button>
