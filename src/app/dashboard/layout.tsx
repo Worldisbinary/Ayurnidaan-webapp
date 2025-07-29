@@ -21,7 +21,8 @@ import {
   Pill,
   Package,
   Home,
-  Menu
+  Menu,
+  User,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Link from 'next/link';
@@ -43,16 +44,22 @@ export default function DashboardLayout({
   }, []);
 
   const getLinkClass = (path: string) => {
-    // On the server or before hydration, return a default class
     if (!isClient) {
       return 'text-primary-foreground/70 hover:text-primary-foreground';
     }
-    // On the client, determine the class based on the current path
     const isActive = pathname === path;
     return isActive
       ? 'bg-primary-foreground/10 text-primary-foreground rounded-full px-3 py-1' 
       : 'text-primary-foreground/70 hover:text-primary-foreground px-3 py-1';
   };
+  
+  const getBottomNavLinkClass = (path: string) => {
+    if (!isClient) {
+      return 'text-muted-foreground';
+    }
+    const isActive = pathname === path;
+    return isActive ? 'text-primary' : 'text-muted-foreground';
+  }
 
   const getDropdownClass = () => {
      if (!isClient) {
@@ -62,13 +69,25 @@ export default function DashboardLayout({
     return isActive ? 'text-primary' : 'text-primary-foreground/70 hover:text-primary-foreground';
   }
 
-  const navLinks = [
-    { href: '/dashboard', icon: <Home className="h-5 w-5" />, label: 'Home' },
-    { href: '/dashboard/new-patient', icon: <PlusCircle className="h-5 w-5" />, label: 'New Patient' },
-    { href: '/dashboard/patient-history', icon: <History className="h-5 w-5" />, label: 'Past Patients' },
+  const topNavLinks = [
+    { href: '/dashboard', label: 'Home' },
+    { href: '/dashboard/new-patient', label: 'New Patient' },
+    { href: '/dashboard/patient-history', label: 'Past Patients' },
+    { href: '/dashboard/medicines', label: 'Medicines' },
+    { href: '/dashboard/supplements', label: 'Supplements' },
+  ];
+
+  const sideNavLinks = [
     { href: '/dashboard/medicines', icon: <Pill className="h-5 w-5" />, label: 'Medicines' },
     { href: '/dashboard/supplements', icon: <Package className="h-5 w-5" />, label: 'Supplements' },
   ];
+
+  const bottomNavLinks = [
+    { href: '/dashboard', icon: <Home className="h-6 w-6" />, label: 'Home' },
+    { href: '/dashboard/new-patient', icon: <PlusCircle className="h-6 w-6" />, label: 'New Patient' },
+    { href: '/dashboard/patient-history', icon: <History className="h-6 w-6" />, label: 'History' },
+    { href: '/dashboard/profile', icon: <User className="h-6 w-6" />, label: 'Profile' },
+  ]
 
   const textLinks = [
      { href: '/dashboard/texts/charaka-samhita', label: 'Charaka Samhita' },
@@ -83,7 +102,7 @@ export default function DashboardLayout({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 flex h-16 items-center gap-4 border-b border-primary-foreground/20 bg-primary text-primary-foreground px-4 md:px-6 z-50">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b border-primary-foreground/20 bg-primary text-primary-foreground px-4 md:px-6 z-40">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 md:flex-nowrap">
           <Link
             href="/dashboard"
@@ -92,7 +111,7 @@ export default function DashboardLayout({
             <Leaf className="h-6 w-6" />
             <span className="sr-only">Ayurnidaan</span>
           </Link>
-          {navLinks.map((link) => (
+          {topNavLinks.map((link) => (
              <Link
               key={link.href}
               href={link.href}
@@ -141,7 +160,7 @@ export default function DashboardLayout({
                 <Leaf className="h-6 w-6 text-primary" />
                 <span >Ayurnidaan</span>
               </Link>
-              {navLinks.map((link) => (
+              {sideNavLinks.map((link) => (
                 <Link
                     key={link.href}
                     href={link.href}
@@ -183,10 +202,21 @@ export default function DashboardLayout({
           </div>
         </div>
       </header>
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 md:pb-8 pb-24">
         {children}
       </main>
-      <footer className="text-center py-4 text-muted-foreground text-sm shrink-0 border-t">
+      
+      {/* Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-background border-t z-50 flex items-center justify-around">
+          {bottomNavLinks.map((link) => (
+            <Link key={link.href} href={link.href} className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-colors ${getBottomNavLinkClass(link.href)}`}>
+                  {link.icon}
+                  <span className="text-xs">{link.label}</span>
+            </Link>
+          ))}
+      </nav>
+
+      <footer className="hidden md:block text-center py-4 text-muted-foreground text-sm shrink-0 border-t">
         © {new Date().getFullYear()} Ayurnidaan. All rights reserved.
       </footer>
     </div>
