@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -64,7 +65,7 @@ export function DiagnosisForm({ onDiagnose, isLoading }: DiagnosisFormProps) {
   return (
     <Card className="shadow-lg border-2 border-primary/20">
       <CardHeader>
-        <CardTitle className="text-2xl font-headline">Patient Intake</CardTitle>
+        <CardTitle className="text-2xl font-headline">New Patient Intake</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
