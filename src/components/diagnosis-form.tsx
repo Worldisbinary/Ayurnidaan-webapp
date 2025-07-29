@@ -558,7 +558,7 @@ export function DiagnosisForm({ onDiagnose, onSave, isLoading, isDiagnosisComple
                 </Button>
                 <Button 
                     type="button" 
-                    variant="secondary" 
+                    variant="outline" 
                     onClick={onSave} 
                     disabled={isLoading || !isDiagnosisComplete} 
                     className="w-full text-lg py-6"
