@@ -1,4 +1,3 @@
-// Implemented the suggestDiagnoses flow, which analyzes patient data and suggests potential imbalances and diseases.
 
 'use server';
 
