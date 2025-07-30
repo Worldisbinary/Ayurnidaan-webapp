@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Leaf, User, Key, Phone, LogIn } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, type ConfirmationResult } from 'firebase/auth';
+import { RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithRedirect, getRedirectResult, type ConfirmationResult } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
 
 // Extend the Window interface to include recaptchaVerifier
@@ -26,6 +26,33 @@ export default function LoginPage() {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
+  const [isProcessingLogin, setIsProcessingLogin] = useState(true); // Start as true
+
+  useEffect(() => {
+    const processRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result) {
+          // This means the user has just been redirected back from Google.
+          toast({ title: "Success", description: "You have been successfully logged in with Google." });
+          router.push('/dashboard');
+        } else {
+           setIsProcessingLogin(false); // No user, stop loading
+        }
+      } catch (error: any) {
+        console.error("Error with Google redirect login:", error);
+        toast({ 
+         title: "Authentication Error", 
+         description: `Google sign-in failed. Please ensure your domain is authorized and the OAuth consent screen is configured correctly.`, 
+         variant: "destructive" 
+       });
+       setIsProcessingLogin(false); // Error, stop loading
+      }
+    };
+    
+    processRedirectResult();
+  }, [router, toast]);
+
 
   const setupRecaptcha = () => {
     // Ensure this only runs on the client
@@ -94,23 +121,29 @@ export default function LoginPage() {
   
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-      toast({ title: "Success", description: "You have been successfully logged in with Google." });
-      router.push('/dashboard');
-    } catch (error: any) {
-       console.error("Error with Google login:", error);
-       toast({ 
-         title: "Authentication Error", 
-         description: `Google sign-in failed. Please ensure your domain is authorized in the Firebase console and the OAuth consent screen is configured.`, 
-         variant: "destructive" 
-       });
-    }
+    // We are now using signInWithRedirect instead of signInWithPopup
+    await signInWithRedirect(auth, provider);
   }
 
   const handleGuestLogin = () => {
     router.push('/dashboard');
   };
+  
+  if (isProcessingLogin) {
+      return (
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+             <div className="flex items-center gap-2 md:gap-4">
+                <Leaf className="w-12 h-12 md:w-16 md:h-16 text-primary animate-pulse" />
+                <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary-foreground text-center">
+                    Ayurnidaan
+                </h1>
+            </div>
+            <p className="text-muted-foreground mt-4 text-center">
+                Checking authentication status...
+            </p>
+        </div>
+      )
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
