@@ -23,6 +23,7 @@ import {
   Home,
   Menu,
   User,
+  Bot,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Link from 'next/link';
@@ -83,6 +84,7 @@ export default function DashboardLayout({
 
   const mainNavLinks = [
     { href: '/dashboard', icon: <Home className="h-5 w-5" />, label: 'Home' },
+    { href: '/dashboard/chat', icon: <Bot className="h-5 w-5" />, label: 'Chat' },
     { href: '/dashboard/new-patient', icon: <PlusCircle className="h-5 w-5" />, label: 'New Patient' },
     { href: '/dashboard/patient-history', icon: <History className="h-5 w-5" />, label: 'Past Patients' },
     { href: '/dashboard/medicines', icon: <Pill className="h-5 w-5" />, label: 'Medicines' },
@@ -92,6 +94,7 @@ export default function DashboardLayout({
 
   const bottomNavLinks = [
     { href: '/dashboard', icon: <Home className="h-6 w-6" />, label: 'Home' },
+    { href: '/dashboard/chat', icon: <Bot className="h-6 w-6" />, label: 'Chat' },
     { href: '/dashboard/new-patient', icon: <PlusCircle className="h-6 w-6" />, label: 'New' },
     { href: '/dashboard/patient-history', icon: <History className="h-6 w-6" />, label: 'History' },
     { href: '/dashboard/profile', icon: <User className="h-6 w-6" />, label: 'You' },
