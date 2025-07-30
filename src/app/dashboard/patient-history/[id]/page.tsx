@@ -91,6 +91,9 @@ export default function PatientDetailPage() {
 
     try {
       const result = await getDiagnosis(actionInput);
+      if (!result) {
+        throw new Error('The AI returned an empty response.');
+      }
       setDiagnosisResult(result);
       
       // Update patient in localStorage
@@ -111,7 +114,7 @@ export default function PatientDetailPage() {
     } catch (error) {
         toast({
             title: "Error",
-            description: (error as Error).message,
+            description: (error as Error).message || "The AI failed to provide a diagnosis. Please check your input and try again.",
             variant: "destructive",
         });
     } finally {
