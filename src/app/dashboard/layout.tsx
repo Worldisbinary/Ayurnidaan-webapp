@@ -98,7 +98,7 @@ export default function DashboardLayout({
     { href: '/dashboard/new-patient', icon: <PlusCircle className="h-6 w-6" />, label: 'New' },
     { href: '/dashboard/patient-history', icon: <History className="h-6 w-6" />, label: 'History' },
     { href: '/dashboard/profile', icon: <User className="h-6 w-6" />, label: 'You' },
-  ]
+  ];
 
   const textLinks = [
      { href: '/dashboard/texts/charaka-samhita', label: 'Charaka Samhita' },
