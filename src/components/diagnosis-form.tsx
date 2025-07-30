@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2, Save, Bot } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2, Save, Bot, Camera } from "lucide-react";
 import React, { useEffect } from 'react';
 
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const diagnosisSchema = z.object({
   name: z.string().min(1, 'Name is required.'),
@@ -116,6 +117,22 @@ export function DiagnosisForm({ onFormChange, onDiagnose, onSave, isLoading }: D
         }
     });
   }
+  
+  const PhysicalObservationTab = ({ type }: { type: string }) => (
+    <Card className="bg-muted/30">
+        <CardContent className="pt-6">
+            <div className="flex flex-col items-center justify-center space-y-4">
+                <div className="w-full h-48 bg-muted rounded-md flex items-center justify-center">
+                    <p className="text-muted-foreground">Image preview will appear here</p>
+                </div>
+                <Button variant="outline">
+                    <Camera className="mr-2" />
+                    Capture {type} Image
+                </Button>
+            </div>
+        </CardContent>
+    </Card>
+  );
 
   return (
     <Card className="shadow-lg border-2 border-primary/20">
@@ -570,6 +587,32 @@ export function DiagnosisForm({ onFormChange, onDiagnose, onSave, isLoading }: D
                     />
                 </CardContent>
             </Card>
+
+            <Card className="bg-background/80">
+                <CardHeader>
+                    <CardTitle className="text-xl font-headline">Physical Observation</CardTitle>
+                    <CardDescription>Image-based assessment for tongue, nails, and skin.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Tabs defaultValue="tongue">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="tongue">Tongue</TabsTrigger>
+                            <TabsTrigger value="nails">Nails</TabsTrigger>
+                            <TabsTrigger value="skin">Skin</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="tongue">
+                           <PhysicalObservationTab type="Tongue" />
+                        </TabsContent>
+                        <TabsContent value="nails">
+                            <PhysicalObservationTab type="Nails" />
+                        </TabsContent>
+                        <TabsContent value="skin">
+                            <PhysicalObservationTab type="Skin" />
+                        </TabsContent>
+                    </Tabs>
+                </CardContent>
+            </Card>
+
 
             <div className="flex flex-col md:flex-row gap-4">
                 <Button type="button" onClick={handleSaveClick} className="w-full text-lg py-6">
