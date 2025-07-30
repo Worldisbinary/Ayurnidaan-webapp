@@ -5,55 +5,54 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Leaf, User, Key, Phone, LogIn } from 'lucide-react';
+import { Leaf, User } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
-import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
 
 
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [isProcessingLogin, setIsProcessingLogin] = useState(true); // Start as true
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const processRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          // This means the user has just been redirected back from Google.
-          toast({ title: "Success", description: "You have been successfully logged in with Google." });
-          router.push('/dashboard');
-        } else {
-           setIsProcessingLogin(false); // No user, stop loading
-        }
-      } catch (error: any) {
-        console.error("Error with Google redirect login:", error);
-        toast({ 
-         title: "Authentication Error", 
-         description: `Google sign-in failed. Please ensure your domain is authorized and the OAuth consent screen is configured correctly. Error: ${error.code}`, 
-         variant: "destructive" 
-       });
-       setIsProcessingLogin(false); // Error, stop loading
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        toast({ title: "Success", description: "You are logged in." });
+        router.push('/dashboard');
+      } else {
+        setIsLoading(false);
       }
-    };
-    
-    processRedirectResult();
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, [router, toast]);
   
   const handleGoogleLogin = async () => {
+    setIsLoading(true);
     const provider = new GoogleAuthProvider();
-    // We are now using signInWithRedirect instead of signInWithPopup
-    await signInWithRedirect(auth, provider);
+    try {
+      await signInWithPopup(auth, provider);
+      // The onAuthStateChanged listener will handle the redirect
+    } catch (error: any) {
+       console.error("Google Sign-In Error:", error);
+       toast({
+         title: "Authentication Error",
+         description: error.message || "An unknown error occurred during sign-in.",
+         variant: "destructive"
+       });
+       setIsLoading(false);
+    }
   }
 
   const handleGuestLogin = () => {
     router.push('/dashboard');
   };
   
-  if (isProcessingLogin) {
+  if (isLoading) {
       return (
         <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
              <div className="flex items-center gap-2 md:gap-4">
@@ -98,7 +97,7 @@ export default function LoginPage() {
           </div>
           
            <div className="space-y-4">
-            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin}>
+            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin} disabled={isLoading}>
               <FcGoogle className="mr-2 w-6 h-6" />
               Google
             </Button>
