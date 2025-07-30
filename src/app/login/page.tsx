@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Leaf, User } from 'lucide-react';
+import { Leaf, User, Loader2 } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'firebase/auth';
@@ -16,6 +16,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -23,6 +24,7 @@ export default function LoginPage() {
         toast({ title: "Success", description: "You are logged in." });
         router.push('/dashboard');
       } else {
+        // Only stop loading if there is no user, allowing the login UI to show
         setIsLoading(false);
       }
     });
@@ -32,7 +34,7 @@ export default function LoginPage() {
   }, [router, toast]);
   
   const handleGoogleLogin = async () => {
-    setIsLoading(true);
+    setIsGoogleLoading(true);
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
@@ -44,7 +46,7 @@ export default function LoginPage() {
          description: error.message || "An unknown error occurred during sign-in.",
          variant: "destructive"
        });
-       setIsLoading(false);
+       setIsGoogleLoading(false);
     }
   }
 
@@ -97,8 +99,12 @@ export default function LoginPage() {
           </div>
           
            <div className="space-y-4">
-            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin} disabled={isLoading}>
-              <FcGoogle className="mr-2 w-6 h-6" />
+            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin} disabled={isGoogleLoading}>
+              {isGoogleLoading ? (
+                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+              ) : (
+                <FcGoogle className="mr-2 w-6 h-6" />
+              )}
               Google
             </Button>
           </div>
