@@ -68,9 +68,6 @@ export default function ProfilePage() {
                 <AvatarFallback>{user ? getInitials(user.displayName) : 'U'}</AvatarFallback>
             </Avatar>
           <CardTitle className="text-2xl font-headline">{user?.displayName || 'Welcome, User'}</CardTitle>
-          <CardDescription>
-            B.A.M.S, M.D. (Ayurveda)
-          </CardDescription>
         </CardHeader>
         <CardContent className="p-6 pt-0 text-center">
             <p className="text-muted-foreground text-sm">{user?.email || user?.phoneNumber || 'No contact info available'}</p>
