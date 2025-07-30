@@ -60,11 +60,9 @@ const suggestDiagnosesFlow = ai.defineFlow(
     name: 'suggestDiagnosesFlow',
     inputSchema: SuggestDiagnosesInputSchema,
     outputSchema: SuggestDiagnosesOutputSchema,
-    model: 'gemini-2.0-flash',
   },
   async input => {
     const {output} = await prompt(input);
     return output!;
   }
 );
-
