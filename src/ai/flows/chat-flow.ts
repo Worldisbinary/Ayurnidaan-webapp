@@ -19,7 +19,7 @@ export type ChatHistory = z.infer<typeof ChatHistorySchema>;
 
 export async function chat(history: ChatHistory) {
   const { stream } = await ai.generate({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-1.5-flash-latest',
     prompt: {
         messages: history,
         // The "system" prompt provides high-level instructions to the model.
