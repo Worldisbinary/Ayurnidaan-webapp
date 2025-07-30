@@ -3,16 +3,13 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  "projectId": "ayurnidaan-5c1te",
+  "appId": "1:1046462212647:web:ffa98d7beec68a45613c02",
+  "storageBucket": "ayurnidaan-5c1te.firebasestorage.app",
+  "apiKey": "AIzaSyBdsh6LT135c_A18dIuvtucBxYWthIE7Yc",
+  "authDomain": "ayurnidaan-5c1te.firebaseapp.com",
+  "messagingSenderId": "1046462212647"
 };
-
-// Log the API key to the browser console to help debug.
-console.log("Attempting to initialize Firebase with API Key:", firebaseConfig.apiKey);
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
