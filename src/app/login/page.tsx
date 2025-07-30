@@ -28,27 +28,21 @@ export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false);
 
   const setupRecaptcha = () => {
-    if (window.recaptchaVerifier) {
-      // Cleanup previous container if it exists to avoid conflicts
-      const oldContainer = document.getElementById('recaptcha-container');
-      if (oldContainer) {
-          oldContainer.remove();
+    // Ensure this only runs on the client
+    if (typeof window === 'undefined') return;
+
+    if (!window.recaptchaVerifier) {
+      const recaptchaContainer = document.getElementById('recaptcha-container');
+      if (recaptchaContainer) {
+          window.recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainer, {
+            'size': 'invisible',
+            'callback': (response: any) => {
+              // reCAPTCHA solved, allow signInWithPhoneNumber.
+            }
+        });
       }
     }
-    
-    const container = document.createElement('div');
-    container.id = 'recaptcha-container';
-    document.body.appendChild(container);
-
-
-    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': (response: any) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-        }
-    });
-    window.recaptchaVerifier = verifier;
-    return verifier;
+    return window.recaptchaVerifier;
   };
 
   const handlePhoneLogin = async () => {
@@ -58,6 +52,10 @@ export default function LoginPage() {
     }
     try {
         const appVerifier = setupRecaptcha();
+        if (!appVerifier) {
+          toast({ title: "Error", description: "reCAPTCHA verifier not initialized.", variant: "destructive" });
+          return;
+        }
         const formattedPhone = `+91${phone}`;
         const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
         window.confirmationResult = confirmationResult;
@@ -65,7 +63,13 @@ export default function LoginPage() {
         toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
     } catch (error: any) {
         console.error("Error sending OTP:", error);
-        toast({ title: "Authentication Error", description: `Failed to send OTP. Please ensure your Firebase project has billing enabled for this feature.`, variant: "destructive" });
+        let errorMessage = "Failed to send OTP.";
+        if (error.code === 'auth/missing-recaptcha-token') {
+            errorMessage = "reCAPTCHA challenge not solved. Please try again.";
+        } else if (error.message.includes("auth/unauthorized-domain")) {
+            errorMessage = "Phone sign-in is not enabled. This feature requires the Firebase Blaze plan.";
+        }
+        toast({ title: "Authentication Error", description: errorMessage, variant: "destructive" });
     }
   };
 
@@ -96,7 +100,11 @@ export default function LoginPage() {
       router.push('/dashboard');
     } catch (error: any) {
        console.error("Error with Google login:", error);
-       toast({ title: "Authentication Error", description: `Google sign-in failed. Please ensure your domain is authorized in the Firebase console and the OAuth consent screen is configured.`, variant: "destructive" });
+       toast({ 
+         title: "Authentication Error", 
+         description: `Google sign-in failed. Please ensure your domain is authorized in the Firebase console and the OAuth consent screen is configured.`, 
+         variant: "destructive" 
+       });
     }
   }
 
@@ -132,6 +140,13 @@ export default function LoginPage() {
             </div>
           </div>
           
+           <div className="space-y-4">
+            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin}>
+              <FcGoogle className="mr-2 w-6 h-6" />
+              Google
+            </Button>
+          </div>
+
           <div className="space-y-4">
             {!otpSent ? (
               <>
@@ -171,15 +186,9 @@ export default function LoginPage() {
             )}
             
           </div>
-          
-          <div className="grid grid-cols-1 gap-4">
-            <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
-              <FcGoogle className="mr-2 w-6 h-6" />
-              Google
-            </Button>
-          </div>
         </CardContent>
       </Card>
+      <div id="recaptcha-container" />
       <footer className="text-center py-4 text-muted-foreground text-sm mt-8">
         © {new Date().getFullYear()} Ayurnidaan. All rights reserved.
       </footer>
