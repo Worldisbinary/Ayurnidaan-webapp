@@ -18,18 +18,20 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
+  // This hook handles the initial auth state check.
+  // It redirects the user to the dashboard if they are already logged in.
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         toast({ title: "Success", description: "You are logged in." });
         router.push('/dashboard');
       } else {
-        // Only stop loading if there is no user, allowing the login UI to show
+        // If there's no user, we stop loading and show the login page.
         setIsLoading(false);
       }
     });
 
-    // Cleanup subscription on unmount
+    // Cleanup subscription on unmount to prevent memory leaks.
     return () => unsubscribe();
   }, [router, toast]);
   
@@ -37,8 +39,9 @@ export default function LoginPage() {
     setIsGoogleLoading(true);
     const provider = new GoogleAuthProvider();
     try {
+      // Use the standard popup method for Google Sign-In.
       await signInWithPopup(auth, provider);
-      // The onAuthStateChanged listener will handle the redirect
+      // The onAuthStateChanged listener above will handle the successful redirect.
     } catch (error: any) {
        console.error("Google Sign-In Error:", error);
        toast({
@@ -54,6 +57,7 @@ export default function LoginPage() {
     router.push('/dashboard');
   };
   
+  // This screen shows while the app checks if you're already logged in.
   if (isLoading) {
       return (
         <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
