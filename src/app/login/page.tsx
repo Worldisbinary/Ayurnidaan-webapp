@@ -153,6 +153,20 @@ export default function LoginPage() {
           <CardDescription>Choose a sign-in method to continue.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+            <Button variant="outline" onClick={handleGuestLogin} className="w-full">
+                <User className="mr-2" />
+                Continue as Guest
+            </Button>
+            
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">Or sign in with</span>
+                </div>
+            </div>
+
             {!confirmationResult ? (
                 <div className="space-y-4">
                     <div className="space-y-2">
@@ -193,30 +207,15 @@ export default function LoginPage() {
             )}
             
             <div id="recaptcha-container"></div>
-
-            <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-                </div>
-            </div>
             
-            <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading}>
-                {isGoogleLoading ? (
-                    <Loader2 className="mr-2 animate-spin" />
-                ) : (
-                    <FcGoogle className="mr-2" />
-                )}
-                Google
-                </Button>
-                <Button variant="outline" onClick={handleGuestLogin}>
-                    <User className="mr-2" />
-                    Guest
-                </Button>
-          </div>
+            <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading} className="w-full">
+            {isGoogleLoading ? (
+                <Loader2 className="mr-2 animate-spin" />
+            ) : (
+                <FcGoogle className="mr-2" />
+            )}
+            Google
+            </Button>
 
         </CardContent>
       </Card>
