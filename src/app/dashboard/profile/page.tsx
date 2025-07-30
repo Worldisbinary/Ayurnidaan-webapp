@@ -8,13 +8,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ChevronLeft, User, LogOut, Users, Award } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 
 
 export default function ProfilePage() {
   const router = useRouter();
   const [patientCount, setPatientCount] = useState(0);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsLoading(false);
+    });
+
     if (typeof window !== 'undefined') {
       try {
         const storedPatients = localStorage.getItem('patients');
@@ -26,7 +35,20 @@ export default function ProfilePage() {
         console.error("Failed to parse patient data from localStorage", error);
       }
     }
+    
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
+  
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/login');
+  };
+
+  const getInitials = (name?: string | null) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  }
 
 
   return (
@@ -42,16 +64,16 @@ export default function ProfilePage() {
       <Card className="shadow-lg">
         <CardHeader className="items-center text-center p-6">
             <Avatar className="w-24 h-24 mb-4 border-2 border-primary">
-                <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="doctor portrait" alt="Dr. Ayurnidaan" />
-                <AvatarFallback>DA</AvatarFallback>
+                <AvatarImage src={user?.photoURL || `https://placehold.co/100x100.png`} data-ai-hint="doctor portrait" alt={user?.displayName || 'User'} />
+                <AvatarFallback>{user ? getInitials(user.displayName) : 'U'}</AvatarFallback>
             </Avatar>
-          <CardTitle className="text-2xl font-headline">Dr. Ayurnidaan</CardTitle>
+          <CardTitle className="text-2xl font-headline">{user?.displayName || 'Welcome, User'}</CardTitle>
           <CardDescription>
             B.A.M.S, M.D. (Ayurveda)
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 pt-0 text-center">
-            <p className="text-muted-foreground text-sm">dr.ayurnidaan@clinic.com</p>
+            <p className="text-muted-foreground text-sm">{user?.email || user?.phoneNumber || 'No contact info available'}</p>
         </CardContent>
       </Card>
       
@@ -78,7 +100,7 @@ export default function ProfilePage() {
             <CardTitle className="text-xl font-headline">Account</CardTitle>
         </CardHeader>
         <CardContent className="mt-4">
-          <Button variant="destructive" className="w-full" onClick={() => router.push('/login')}>
+          <Button variant="destructive" className="w-full" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4"/>
               Logout
           </Button>
