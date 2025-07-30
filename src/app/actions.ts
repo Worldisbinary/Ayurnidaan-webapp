@@ -4,7 +4,8 @@
 import { suggestDiagnoses, type SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { fetchArticles as fetchArticlesFlow, type Article } from '@/ai/flows/fetch-articles';
 import { chat, type ChatHistory } from '@/ai/flows/chat-flow';
-
+import Razorpay from 'razorpay';
+import { randomUUID } from 'crypto';
 
 export async function getDiagnosis(input: SuggestDiagnosesInput): Promise<any> {
   try {
@@ -35,3 +36,25 @@ export async function continueConversation(history: ChatHistory) {
 
     return stream.pipeThrough(transformStream);
 }
+
+export async function createRazorpayOrder({ amount }: { amount: number }) {
+  const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID!,
+    key_secret: process.env.RAZORPAY_KEY_SECRET!,
+  });
+
+  const options = {
+    amount: amount * 100, // amount in the smallest currency unit
+    currency: 'INR',
+    receipt: `receipt_${randomUUID()}`,
+  };
+
+  try {
+    const order = await razorpay.orders.create(options);
+    return order;
+  } catch (error) {
+    console.error('RAZORPAY ERROR', error);
+    throw new Error('Failed to create Razorpay order');
+  }
+}
+
