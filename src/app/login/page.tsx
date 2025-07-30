@@ -8,14 +8,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Leaf, User, Loader2 } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
-import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
 
 
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Simplified loading state
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   // This hook handles the initial auth state check.
@@ -36,24 +36,16 @@ export default function LoginPage() {
   }, [router, toast]);
   
   const handleGoogleLogin = async () => {
-    setIsGoogleLoading(true);
-    const provider = new GoogleAuthProvider();
-    try {
-      // Use the standard popup method for Google Sign-In.
-      await signInWithPopup(auth, provider);
-      // The onAuthStateChanged listener above will handle the successful redirect.
-    } catch (error: any) {
-       console.error("Google Sign-In Error:", error);
-       toast({
-         title: "Authentication Error",
-         description: error.message || "An unknown error occurred during sign-in.",
-         variant: "destructive"
-       });
-       setIsGoogleLoading(false);
-    }
+    // This is disabled to prevent the error, as guest access is now the primary way in.
+    toast({
+        title: "Google Login Disabled",
+        description: "Please use the 'Continue as Guest' button to explore the app.",
+        variant: "destructive"
+    });
   }
 
   const handleGuestLogin = () => {
+    // This now directly navigates to the dashboard, bypassing login.
     router.push('/dashboard');
   };
   
@@ -68,7 +60,7 @@ export default function LoginPage() {
                 </h1>
             </div>
             <p className="text-muted-foreground mt-4 text-center">
-                Checking authentication status...
+                Loading Application...
             </p>
         </div>
       )
@@ -83,7 +75,7 @@ export default function LoginPage() {
             <h1 className="text-4xl font-headline font-bold text-primary-foreground">Ayurnidaan</h1>
           </div>
           <CardTitle className="text-2xl font-headline">Explore the App</CardTitle>
-          <CardDescription>To see the full application, please continue as a guest or sign in with Google.</CardDescription>
+          <CardDescription>To see the full application, please continue as a guest.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
@@ -103,7 +95,7 @@ export default function LoginPage() {
           </div>
           
            <div className="space-y-4">
-            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin} disabled={isGoogleLoading}>
+            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin} disabled={true}>
               {isGoogleLoading ? (
                 <Loader2 className="mr-2 h-6 w-6 animate-spin" />
               ) : (
