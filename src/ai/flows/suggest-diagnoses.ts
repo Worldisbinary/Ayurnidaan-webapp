@@ -47,6 +47,8 @@ const prompt = ai.definePrompt({
   name: 'suggestDiagnosesPrompt',
   input: {schema: SuggestDiagnosesInputSchema},
   output: {schema: SuggestDiagnosesOutputSchema},
+  // Explicitly defining the model here for robustness
+  model: 'gemini-2.0-flash', 
   prompt: `You are an expert Ayurvedic practitioner. Analyze the patient data provided below and suggest potential Dosha imbalances and possible diseases. Provide a reasoning for your diagnosis.
 
 Patient Details: {{{patientDetails}}}

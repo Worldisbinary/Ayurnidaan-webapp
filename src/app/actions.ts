@@ -8,14 +8,13 @@ import Razorpay from 'razorpay';
 import { randomUUID } from 'crypto';
 
 export async function getDiagnosis(input: SuggestDiagnosesInput): Promise<any> {
-  try {
-    const result = await suggestDiagnoses(input);
-    return result;
-  } catch (error) {
-    console.error("Error in getDiagnosis action:", error);
-    // Let the client handle the error message display
-    throw new Error('The AI failed to provide a diagnosis. Please check your input and try again.');
+  // By removing the try/catch, the original error from the AI flow will be
+  // propagated to the client, giving us a more specific error message.
+  const result = await suggestDiagnoses(input);
+  if (!result) {
+      throw new Error('The AI returned an empty response.');
   }
+  return result;
 }
 
 export async function fetchArticles(): Promise<Article[]> {
@@ -57,4 +56,3 @@ export async function createRazorpayOrder({ amount }: { amount: number }) {
     throw new Error('Failed to create Razorpay order');
   }
 }
-
