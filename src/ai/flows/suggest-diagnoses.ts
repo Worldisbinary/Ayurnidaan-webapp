@@ -40,31 +40,11 @@ export type SuggestDiagnosesOutput = z.infer<typeof SuggestDiagnosesOutputSchema
 export async function suggestDiagnoses(
   input: SuggestDiagnosesInput
 ): Promise<SuggestDiagnosesOutput> {
-  return suggestDiagnosesFlow(input);
+  console.log("Returning static diagnosis as billing is not enabled.");
+  // We are returning a static diagnosis to avoid requiring an API key for now.
+  return {
+    potentialImbalances: "Vata-Pitta Imbalance (वात-पित्त असंतुलन)",
+    possibleDiseases: "Amlapitta (Acidity/GERD), Grahani (IBS/Malabsorption)",
+    reasoning: "This is a static sample diagnosis. The combination of symptoms like irregular appetite (Kshudha), disturbed sleep (Nidra), and a coated tongue (Saam Jivha) points towards a dual Dosha imbalance. To get a live AI-powered diagnosis, please ensure your Google Cloud project has billing enabled and a valid API key is configured in your .env file."
+  };
 }
-
-const prompt = ai.definePrompt({
-  name: 'suggestDiagnosesPrompt',
-  input: {schema: SuggestDiagnosesInputSchema},
-  output: {schema: SuggestDiagnosesOutputSchema},
-  // Explicitly defining the model here for robustness
-  model: 'gemini-pro', 
-  prompt: `You are an expert Ayurvedic practitioner. Analyze the patient data provided below and suggest potential Dosha imbalances and possible diseases. Provide a reasoning for your diagnosis.
-
-Patient Details: {{{patientDetails}}}
-Symptoms: {{{symptoms}}}
-
-Consider all information to prioritize likely diagnoses.`,
-});
-
-const suggestDiagnosesFlow = ai.defineFlow(
-  {
-    name: 'suggestDiagnosesFlow',
-    inputSchema: SuggestDiagnosesInputSchema,
-    outputSchema: SuggestDiagnosesOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);

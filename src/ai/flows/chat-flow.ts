@@ -17,18 +17,43 @@ const MessageSchema = z.object({
 const ChatHistorySchema = z.array(MessageSchema);
 export type ChatHistory = z.infer<typeof ChatHistorySchema>;
 
+export async function continueConversation(history: ChatHistory) {
+    const stream = await chat(history);
+    
+    // The ReadableStream object is not serializable, so we convert it to a different format.
+    // This is a workaround to allow the client to read the stream.
+    const transformStream = new TransformStream({
+        transform(chunk, controller) {
+            controller.enqueue(chunk.text);
+        },
+    });
+
+    return stream.pipeThrough(transformStream);
+}
+
 export async function chat(history: ChatHistory) {
-  const { stream } = await ai.generate({
-    model: 'gemini-pro',
-    prompt: {
-        messages: history,
-        // The "system" prompt provides high-level instructions to the model.
-        system: `You are a helpful Ayurvedic chatbot. Your name is AyurBot.
-        Converse with the user and answer their questions about Ayurveda.
-        Be friendly, knowledgeable, and concise.`
-    },
-    // We are requesting the response to be streamed back to the client.
-    stream: true,
+  // This flow is returning a static response to avoid requiring an API key for now.
+  const staticResponse = "This is a static response from AyurBot. To enable live chat, please ensure your Google Cloud project has billing enabled and a valid API key is in your .env file.";
+  
+  // Create a ReadableStream from the static response
+  const stream = new ReadableStream({
+    start(controller) {
+      // Simulate streaming by breaking the message into chunks
+      const chunks = staticResponse.split(' ');
+      let i = 0;
+      function pushChunk() {
+        if (i < chunks.length) {
+          const chunkText = i === 0 ? chunks[i] : ' ' + chunks[i];
+          controller.enqueue({ text: chunkText });
+          i++;
+          setTimeout(pushChunk, 50); // Delay between chunks
+        } else {
+          controller.close();
+        }
+      }
+      pushChunk();
+    }
   });
+
   return stream;
 }

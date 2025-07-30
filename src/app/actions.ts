@@ -29,6 +29,7 @@ export async function continueConversation(history: ChatHistory) {
     // This is a workaround to allow the client to read the stream.
     const transformStream = new TransformStream({
         transform(chunk, controller) {
+            // The static chat flow now directly provides the object with a `text` property.
             controller.enqueue(chunk.text);
         },
     });
