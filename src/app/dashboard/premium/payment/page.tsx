@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, CreditCard, Lock } from 'lucide-react';
+import { ChevronLeft, CreditCard, Lock, QrCode } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -45,45 +46,74 @@ export default function PaymentPage() {
                 <CreditCard className="w-8 h-8 text-primary" />
                 Payment Information
               </CardTitle>
-              <CardDescription>Enter your payment details below. All transactions are secure.</CardDescription>
+              <CardDescription>All transactions are secure. Choose your payment method.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="card-name">Name on Card</Label>
-                <Input id="card-name" placeholder="e.g., John Doe" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="card-number">Card Number</Label>
-                <Input id="card-number" placeholder="XXXX XXXX XXXX XXXX" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="expiry-date">Expiry Date</Label>
-                    <Input id="expiry-date" placeholder="MM/YY" />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="cvc">CVC</Label>
-                    <Input id="cvc" placeholder="XXX" />
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="country">Country</Label>
-                    <Select>
-                        <SelectTrigger id="country">
-                            <SelectValue placeholder="Select Country" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="IN">India</SelectItem>
-                            <SelectItem value="US">United States</SelectItem>
-                            <SelectItem value="CA">Canada</SelectItem>
-                             <SelectItem value="GB">United Kingdom</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-              </div>
-               <Button onClick={handlePayment} className="w-full text-lg py-6 mt-4">
-                <Lock className="mr-2" />
-                Pay {currentPlan.price} securely
-              </Button>
+            <CardContent>
+              <Tabs defaultValue="card" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="card">
+                        <CreditCard className="mr-2 h-4 w-4" /> Card
+                    </TabsTrigger>
+                    <TabsTrigger value="upi">
+                        <QrCode className="mr-2 h-4 w-4" /> UPI
+                    </TabsTrigger>
+                </TabsList>
+                <TabsContent value="card" className="pt-6">
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="card-name">Name on Card</Label>
+                            <Input id="card-name" placeholder="e.g., John Doe" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="card-number">Card Number</Label>
+                            <Input id="card-number" placeholder="XXXX XXXX XXXX XXXX" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="expiry-date">Expiry Date</Label>
+                                <Input id="expiry-date" placeholder="MM/YY" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="cvc">CVC</Label>
+                                <Input id="cvc" placeholder="XXX" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="country">Country</Label>
+                                <Select>
+                                    <SelectTrigger id="country">
+                                        <SelectValue placeholder="Select Country" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="IN">India</SelectItem>
+                                        <SelectItem value="US">United States</SelectItem>
+                                        <SelectItem value="CA">Canada</SelectItem>
+                                        <SelectItem value="GB">United Kingdom</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <Button onClick={handlePayment} className="w-full text-lg py-6 mt-4">
+                            <Lock className="mr-2" />
+                            Pay {currentPlan.price} securely
+                        </Button>
+                    </div>
+                </TabsContent>
+                <TabsContent value="upi" className="pt-6">
+                   <div className="space-y-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="upi-id">UPI ID (VPA)</Label>
+                            <Input id="upi-id" placeholder="yourname@bank" />
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            A payment request will be sent to your UPI app.
+                        </p>
+                        <Button onClick={handlePayment} className="w-full text-lg py-6 mt-4">
+                            <Lock className="mr-2" />
+                            Pay {currentPlan.price} via UPI
+                        </Button>
+                   </div>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>
