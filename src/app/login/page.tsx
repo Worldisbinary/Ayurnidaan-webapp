@@ -28,14 +28,12 @@ export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false);
 
   const setupRecaptcha = () => {
-    // Return existing verifier if it exists
     if (window.recaptchaVerifier) {
-      return window.recaptchaVerifier;
-    }
-    // Cleanup previous container if it exists
-    const oldContainer = document.getElementById('recaptcha-container');
-    if (oldContainer) {
-        oldContainer.remove();
+      // Cleanup previous container if it exists to avoid conflicts
+      const oldContainer = document.getElementById('recaptcha-container');
+      if (oldContainer) {
+          oldContainer.remove();
+      }
     }
     
     const container = document.createElement('div');
@@ -62,12 +60,12 @@ export default function LoginPage() {
         const appVerifier = setupRecaptcha();
         const formattedPhone = `+91${phone}`;
         const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-        window.confirmationResult = confirmationResult; // Store it on the window object
+        window.confirmationResult = confirmationResult;
         setOtpSent(true);
         toast({ title: "OTP Sent", description: "Please check your phone for the verification code." });
     } catch (error: any) {
         console.error("Error sending OTP:", error);
-        toast({ title: "Error", description: `Failed to send OTP. This feature requires billing to be enabled in Firebase.`, variant: "destructive" });
+        toast({ title: "Authentication Error", description: `Failed to send OTP. Please ensure your Firebase project has billing enabled for this feature.`, variant: "destructive" });
     }
   };
 
@@ -98,7 +96,7 @@ export default function LoginPage() {
       router.push('/dashboard');
     } catch (error: any) {
        console.error("Error with Google login:", error);
-       toast({ title: "Error", description: `Google sign-in failed: ${error.message}`, variant: "destructive" });
+       toast({ title: "Authentication Error", description: `Google sign-in failed. Please ensure your domain is authorized in the Firebase console and the OAuth consent screen is configured.`, variant: "destructive" });
     }
   }
 
@@ -148,7 +146,7 @@ export default function LoginPage() {
                     onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
-                <Button variant="secondary" onClick={handlePhoneLogin} className="w-full text-lg py-6">
+                <Button variant="secondary" onClick={handlePhoneLogin} className="w-full">
                   <LogIn className="mr-2" />
                   Send OTP
                 </Button>
@@ -166,7 +164,7 @@ export default function LoginPage() {
                         onChange={(e) => setOtp(e.target.value)}
                     />
                 </div>
-                <Button variant="secondary" onClick={handleVerifyOtp} className="w-full text-lg py-6">
+                <Button variant="secondary" onClick={handleVerifyOtp} className="w-full">
                   Verify OTP & Sign In
                 </Button>
               </>
@@ -175,7 +173,7 @@ export default function LoginPage() {
           </div>
           
           <div className="grid grid-cols-1 gap-4">
-            <Button variant="outline" className="w-full text-lg py-6" onClick={handleGoogleLogin}>
+            <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
               <FcGoogle className="mr-2 w-6 h-6" />
               Google
             </Button>
