@@ -26,6 +26,7 @@ import { Loader2, Sparkles, Bot, Stethoscope, HeartPulse, BrainCircuit, Leaf } f
 import { getDosha, type GetDoshaOutput } from '@/app/actions';
 import { GetDoshaInputSchema } from '@/ai/schemas/dosha-schema';
 import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from '@/components/ui/skeleton';
 
 type GetDoshaFormValues = z.infer<typeof GetDoshaInputSchema>;
 
@@ -143,7 +144,7 @@ export default function CheckupPage() {
                             <CardHeader>
                                 <Skeleton className="h-8 w-3/4" />
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <CardContent className="space-y-4 pt-6">
                                 <Skeleton className="h-4 w-full" />
                                 <Skeleton className="h-4 w-5/6" />
                                 <Skeleton className="h-4 w-full" />
@@ -166,7 +167,7 @@ export default function CheckupPage() {
                                 <HeartPulse className="w-8 h-8 text-accent-foreground" />
                                 <CardTitle className="text-2xl font-headline text-accent-foreground">Your Primary Dosha</CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="pt-6">
                                 <p className="text-3xl font-bold text-accent-foreground">{result.dosha}</p>
                                 </CardContent>
                             </Card>
@@ -175,7 +176,7 @@ export default function CheckupPage() {
                                 <BrainCircuit className="w-8 h-8 text-primary" />
                                 <CardTitle className="text-xl font-headline">AI Analysis</CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="pt-6">
                                 <p className="text-base leading-relaxed">{result.reasoning}</p>
                                 </CardContent>
                             </Card>
@@ -184,11 +185,11 @@ export default function CheckupPage() {
                                 <Leaf className="w-8 h-8 text-primary" />
                                 <CardTitle className="text-xl font-headline">Dietary Tips</CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="pt-6">
                                     <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
                                         {result.dietaryRecommendations.map((tip, i) => <li key={i}>{tip}</li>)}
                                     </ul>
-                                </Content>
+                                </CardContent>
                             </Card>
                          </div>
                     )}
