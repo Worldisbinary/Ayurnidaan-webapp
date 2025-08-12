@@ -69,13 +69,13 @@ export default function CheckupPage() {
     }
     
     const questions = [
-        { name: "bodyFrame", label: "Body Frame", options: ["Slim, light frame, thin", "Medium build, muscular", "Large build, well-developed"] },
-        { name: "bodyWeight", label: "Body Weight", options: ["Low, hard to gain weight", "Moderate, easy to gain/lose", "Heavy, easy to gain weight"] },
-        { name: "skinType", label: "Skin Type", options: ["Dry, rough, cool", "Sensitive, warm, prone to rashes", "Oily, smooth, cool"] },
-        { name: "hairType", label: "Hair Type", options: ["Dry, frizzy, brittle", "Fine, straight, may grey early", "Thick, oily, wavy"] },
-        { name: "appetite", label: "Appetite", options: ["Irregular, variable", "Strong, sharp, can't miss meals", "Slow but steady, can skip meals"] },
-        { name: "mood", label: "General Mood", options: ["Enthusiastic, anxious, changeable", "Focused, intense, irritable", "Calm, steady, sometimes lethargic"] },
-        { name: "energyLevels", label: "Energy Levels", options: ["Comes in bursts, variable", "Consistent, high output", "Steady, slow to start"] },
+        { name: "bodyFrame", label: "Body Frame (शारीरिक बनावट)", options: ["Slim, light frame, thin (पतला, हल्का)", "Medium build, muscular (मध्यम, मांसल)", "Large build, well-developed (बड़ा, सुडौल)"] },
+        { name: "bodyWeight", label: "Body Weight (शारीरिक वजन)", options: ["Low, hard to gain weight (कम, वजन बढ़ना मुश्किल)", "Moderate, easy to gain/lose (मध्यम, वजन आसानी से बढ़ता/घटता है)", "Heavy, easy to gain weight (भारी, वजन आसानी से बढ़ता है)"] },
+        { name: "skinType", label: "Skin Type (त्वचा का प्रकार)", options: ["Dry, rough, cool (सूखी, खुरदरी, ठंडी)", "Sensitive, warm, prone to rashes (संवेदनशील, गर्म, दानों की प्रवृत्ति)", "Oily, smooth, cool (तैलीय, चिकनी, ठंडी)"] },
+        { name: "hairType", label: "Hair Type (बालों का प्रकार)", options: ["Dry, frizzy, brittle (रूखे, उलझे, भंगुर)", "Fine, straight, may grey early (पतले, सीधे, जल्दी सफेद हो सकते हैं)", "Thick, oily, wavy (घने, तैलीय, लहरदार)"] },
+        { name: "appetite", label: "Appetite (भूख)", options: ["Irregular, variable (अनियमित, परिवर्तनशील)", "Strong, sharp, can't miss meals (तेज, तीव्र, भोजन नहीं छोड़ सकते)", "Slow but steady, can skip meals (धीमी लेकिन स्थिर, भोजन छोड़ सकते हैं)"] },
+        { name: "mood", label: "General Mood (सामान्य मनोदशा)", options: ["Enthusiastic, anxious, changeable (उत्साही, चिंतित, परिवर्तनशील)", "Focused, intense, irritable (केंद्रित, तीव्र, चिड़चिड़ा)", "Calm, steady, sometimes lethargic (शांत, स्थिर, कभी-कभी सुस्त)"] },
+        { name: "energyLevels", label: "Energy Levels (ऊर्जा का स्तर)", options: ["Comes in bursts, variable (अचानक ऊर्जा आना, परिवर्तनशील)", "Consistent, high output (लगातार, उच्च उत्पादन)", "Steady, slow to start (स्थिर, शुरू करने में धीमा)"] },
     ] as const;
 
     return (
@@ -120,8 +120,7 @@ export default function CheckupPage() {
                                         )}
                                     />
                                 ))}
-                               <
-                                Button type="submit" className="w-full text-lg py-6" disabled={isLoading}>
+                                <Button type="submit" className="w-full text-lg py-6" disabled={isLoading}>
                                      {isLoading ? (
                                         <>
                                         <Loader2 className="mr-2 h-6 w-6 animate-spin" />
@@ -189,7 +188,7 @@ export default function CheckupPage() {
                                     <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
                                         {result.dietaryRecommendations.map((tip, i) => <li key={i}>{tip}</li>)}
                                     </ul>
-                                </CardContent>
+                                </Content>
                             </Card>
                          </div>
                     )}
