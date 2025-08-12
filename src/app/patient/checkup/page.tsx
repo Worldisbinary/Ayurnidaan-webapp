@@ -23,7 +23,8 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Sparkles, Bot, Stethoscope, HeartPulse, BrainCircuit, Leaf } from 'lucide-react';
-import { getDosha, GetDoshaInputSchema, type GetDoshaOutput } from '@/app/actions';
+import { getDosha, type GetDoshaOutput } from '@/app/actions';
+import { GetDoshaInputSchema } from '@/ai/flows/get-dosha';
 import { useToast } from "@/hooks/use-toast";
 
 type GetDoshaFormValues = z.infer<typeof GetDoshaInputSchema>;
