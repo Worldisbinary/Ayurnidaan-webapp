@@ -4,6 +4,7 @@
 import { suggestDiagnoses, type SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { fetchArticles as fetchArticlesFlow, type Article } from '@/ai/flows/fetch-articles';
 import { chat, type ChatHistory } from '@/ai/flows/chat-flow';
+import { getDosha as getDoshaFlow, type GetDoshaInput, type GetDoshaOutput } from '@/ai/flows/get-dosha';
 import Razorpay from 'razorpay';
 import { randomUUID } from 'crypto';
 
@@ -36,6 +37,15 @@ export async function continueConversation(history: ChatHistory) {
 
     return stream.pipeThrough(transformStream);
 }
+
+export async function getDosha(input: GetDoshaInput): Promise<GetDoshaOutput> {
+    const result = await getDoshaFlow(input);
+    if (!result) {
+        throw new Error('The AI returned an empty response.');
+    }
+    return result;
+}
+
 
 export async function createRazorpayOrder({ amount }: { amount: number }) {
   const razorpay = new Razorpay({

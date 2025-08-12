@@ -9,11 +9,13 @@ import {
   Menu,
   User,
   HeartPulse,
-  Video
+  LogOut
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { auth } from '@/lib/firebase';
+
 
 export default function PatientLayout({
   children,
@@ -38,15 +40,20 @@ export default function PatientLayout({
     return isActive ? 'text-primary' : 'text-muted-foreground';
   }
 
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/login');
+  };
+
   const mainNavLinks = [
     { href: '/patient/home', icon: <Home className="h-5 w-5" />, label: 'Home' },
-    { href: '/patient/checkup', icon: <HeartPulse className="h-5 w-5" />, label: 'Check-up' },
+    { href: '/patient/checkup', icon: <HeartPulse className="h-5 w-5" />, label: 'My Dosha' },
     { href: '/patient/profile', icon: <User className="h-5 w-5" />, label: 'Profile' },
   ];
 
   const bottomNavLinks = [
     { href: '/patient/home', icon: <Home className="h-6 w-6" />, label: 'Home' },
-    { href: '/patient/checkup', icon: <HeartPulse className="h-6 w-6" />, label: 'Check-up' },
+    { href: '/patient/checkup', icon: <HeartPulse className="h-6 w-6" />, label: 'My Dosha' },
     { href: '/patient/profile', icon: <User className="h-6 w-6" />, label: 'Profile' },
   ];
   
@@ -57,7 +64,7 @@ export default function PatientLayout({
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <header className="flex h-16 items-center gap-4 border-b bg-muted/40 px-4 md:px-6 z-40 sticky top-0">
+      <header className="flex h-16 items-center justify-between gap-4 border-b bg-muted/40 px-4 md:px-6 z-40 sticky top-0">
          {/* Mobile Sheet Trigger */}
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
@@ -92,15 +99,31 @@ export default function PatientLayout({
                 </Link>
               ))}
             </nav>
+            <div className="mt-auto">
+               <Button variant="outline" className="w-full justify-start gap-4" onClick={handleLogout}>
+                  <LogOut className="h-5 w-5" />
+                  Logout
+              </Button>
+            </div>
           </SheetContent>
         </Sheet>
         
-        <div className="flex w-full items-center justify-start">
+        <div className="flex-1">
              <Link href="/patient/home" className="flex items-center gap-2 font-semibold">
               <Leaf className="h-6 w-6 text-primary" />
-              <span className="text-xl font-headline">Ayurnidaan</span>
+              <span className="hidden md:inline-block text-xl font-headline">Ayurnidaan</span>
             </Link>
         </div>
+        
+        <div className="flex items-center gap-2">
+           <span className="hidden sm:inline text-sm text-muted-foreground">
+             {auth.currentUser?.displayName || auth.currentUser?.email || ''}
+           </span>
+           <Button variant="outline" size="icon" className="hidden md:inline-flex" onClick={handleLogout}>
+              <LogOut className="h-5 w-5" />
+           </Button>
+        </div>
+
 
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 md:pb-8 pb-24">

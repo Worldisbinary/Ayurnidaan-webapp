@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Leaf, User, Phone, KeyRound, Loader2, Stethoscope } from 'lucide-react';
+import { Leaf, User, KeyRound, Loader2, Stethoscope, Briefcase } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
 import { 
@@ -20,6 +20,15 @@ import {
 } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 
 export default function UnifiedLoginPage() {
@@ -29,6 +38,7 @@ export default function UnifiedLoginPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isPhoneLoading, setIsPhoneLoading] = useState(false);
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
@@ -37,8 +47,8 @@ export default function UnifiedLoginPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        toast({ title: "Success", description: "You are logged in." });
-        router.push('/dashboard');
+        // User is signed in, show role selection dialog.
+        setShowRoleDialog(true);
       } else {
         setIsLoading(false);
       }
@@ -46,6 +56,16 @@ export default function UnifiedLoginPage() {
 
     return () => unsubscribe();
   }, [router, toast]);
+
+  const handleRoleSelection = (role: 'doctor' | 'patient') => {
+    setShowRoleDialog(false);
+    toast({ title: "Success", description: "You are logged in." });
+    if (role === 'doctor') {
+      router.push('/dashboard');
+    } else {
+      router.push('/patient/home');
+    }
+  };
 
   const setupRecaptcha = () => {
     if (!(window as any).recaptchaVerifier) {
@@ -117,10 +137,6 @@ export default function UnifiedLoginPage() {
         setIsPhoneLoading(false);
     }
   }
-
-  const handleGuestLogin = () => {
-    router.push('/dashboard');
-  };
   
   if (isLoading) {
       return (
@@ -140,6 +156,25 @@ export default function UnifiedLoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+       <AlertDialog open={showRoleDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>One Last Step!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Please select your role to proceed to the correct dashboard.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-col sm:space-x-0 gap-2">
+            <AlertDialogAction onClick={() => handleRoleSelection('doctor')} className="w-full">
+              <Briefcase className="mr-2" /> Continue as a Doctor
+            </AlertDialogAction>
+            <AlertDialogAction onClick={() => handleRoleSelection('patient')} className="w-full">
+              <User className="mr-2" /> Continue as a Patient
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Card className="w-full max-w-md shadow-2xl border-primary/20">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-3 mb-4">
@@ -147,92 +182,67 @@ export default function UnifiedLoginPage() {
             <h1 className="text-4xl font-headline font-bold">Ayurnidaan</h1>
           </div>
           <CardTitle className="text-2xl font-headline">Welcome</CardTitle>
-          <CardDescription>Please select your role to continue.</CardDescription>
+          <CardDescription>Sign in to continue to your dashboard.</CardDescription>
         </CardHeader>
-        <CardContent>
-            <Tabs defaultValue="doctor" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="doctor"><Stethoscope className="mr-2"/> Doctor</TabsTrigger>
-                    <TabsTrigger value="patient"><User className="mr-2"/> Patient</TabsTrigger>
-                </TabsList>
-                <TabsContent value="doctor" className="pt-6 space-y-6">
-                    <Button variant="outline" onClick={handleGuestLogin} className="w-full">
-                        <User className="mr-2" />
-                        Continue as Guest
-                    </Button>
-                    
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-card px-2 text-muted-foreground">Or sign in with</span>
-                        </div>
-                    </div>
-
-                    {!confirmationResult ? (
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="phone">Phone Number</Label>
-                                <div className="flex gap-2">
-                                    <Input 
-                                        id="phone" 
-                                        type="tel" 
-                                        placeholder="+91 12345 67890" 
-                                        value={phoneNumber}
-                                        onChange={(e) => setPhoneNumber(e.target.value)}
-                                        disabled={isPhoneLoading}
-                                    />
-                                    <Button onClick={handleSendOtp} disabled={isPhoneLoading}>
-                                        {isPhoneLoading ? <Loader2 className="animate-spin"/> : "Send OTP"}
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="otp">Enter OTP</Label>
-                                <Input 
-                                    id="otp" 
-                                    type="text" 
-                                    placeholder="123456"
-                                    value={otp}
-                                    onChange={(e) => setOtp(e.target.value)} 
-                                    disabled={isPhoneLoading}
-                                />
-                            </div>
-                            <Button onClick={handleVerifyOtp} className="w-full" disabled={isPhoneLoading}>
-                                {isPhoneLoading ? <Loader2 className="mr-2 animate-spin" /> : <KeyRound className="mr-2" />}
-                                Verify OTP & Sign In
+        <CardContent className="space-y-6">
+            {!confirmationResult ? (
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <div className="flex gap-2">
+                            <Input 
+                                id="phone" 
+                                type="tel" 
+                                placeholder="+91 12345 67890" 
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                disabled={isPhoneLoading}
+                            />
+                            <Button onClick={handleSendOtp} disabled={isPhoneLoading}>
+                                {isPhoneLoading ? <Loader2 className="animate-spin"/> : "Send OTP"}
                             </Button>
                         </div>
-                    )}
-                    
-                    <div id="recaptcha-container"></div>
-                    
-                    <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading} className="w-full">
-                    {isGoogleLoading ? (
-                        <Loader2 className="mr-2 animate-spin" />
-                    ) : (
-                        <FcGoogle className="mr-2" />
-                    )}
-                    Google
-                    </Button>
-                </TabsContent>
-                <TabsContent value="patient" className="pt-6">
-                    <div className="text-center text-muted-foreground p-4">
-                        <p>Continue to the patient dashboard to explore wellness resources.</p>
                     </div>
-                     <Button
-                        variant="default"
-                        className="w-full h-16 text-lg"
-                        onClick={() => router.push('/patient/home')}
-                    >
-                        <User className="mr-4 h-6 w-6" /> Continue as a Patient
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="otp">Enter OTP</Label>
+                        <Input 
+                            id="otp" 
+                            type="text" 
+                            placeholder="123456"
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)} 
+                            disabled={isPhoneLoading}
+                        />
+                    </div>
+                    <Button onClick={handleVerifyOtp} className="w-full" disabled={isPhoneLoading}>
+                        {isPhoneLoading ? <Loader2 className="mr-2 animate-spin" /> : <KeyRound className="mr-2" />}
+                        Verify OTP & Sign In
                     </Button>
-                </TabsContent>
-            </Tabs>
+                </div>
+            )}
+            
+            <div id="recaptcha-container"></div>
+            
+             <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">Or</span>
+                </div>
+            </div>
+            
+            <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading} className="w-full">
+            {isGoogleLoading ? (
+                <Loader2 className="mr-2 animate-spin" />
+            ) : (
+                <FcGoogle className="mr-2" />
+            )}
+            Sign in with Google
+            </Button>
         </CardContent>
       </Card>
        <footer className="text-center py-4 text-muted-foreground text-sm mt-8">
