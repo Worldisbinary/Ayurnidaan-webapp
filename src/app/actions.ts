@@ -4,7 +4,8 @@
 import { suggestDiagnoses, type SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
 import { fetchArticles as fetchArticlesFlow, type Article } from '@/ai/flows/fetch-articles';
 import { chat, type ChatHistory } from '@/ai/flows/chat-flow';
-import { getDosha as getDoshaFlow, type GetDoshaInput, type GetDoshaOutput } from '@/ai/flows/get-dosha';
+import { getDosha as getDoshaFlow } from '@/ai/flows/get-dosha';
+import type { GetDoshaInput, GetDoshaOutput } from '@/ai/schemas/dosha-schema';
 import Razorpay from 'razorpay';
 import { randomUUID } from 'crypto';
 
