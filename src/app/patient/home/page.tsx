@@ -16,6 +16,7 @@ interface YogaVideo {
     description: string;
     prompt: string;
     videoUrl?: string; // This will hold the base64 data URI
+    failed?: boolean;
 }
 
 const initialYogaVideos: YogaVideo[] = [
@@ -47,48 +48,56 @@ export default function PatientHomePage() {
   const { toast } = useToast();
   const [videos, setVideos] = useState<YogaVideo[]>(initialYogaVideos);
   const [isGenerating, setIsGenerating] = useState(true); // Manages the video generation process
-  const [generationFailed, setGenerationFailed] = useState(false);
 
   useEffect(() => {
+    let isMounted = true; // Flag to prevent state updates on unmounted component
     const generateVideos = async () => {
       setIsGenerating(true);
-      setGenerationFailed(false);
-       toast({
+      toast({
           title: "Generating Yoga Videos...",
           description: "This may take a minute or two. Please be patient.",
-        });
-      try {
-        const videoPromises = initialYogaVideos.map(video => 
-            generateYogaVideo({ prompt: video.prompt })
-        );
-        const videoDataUris = await Promise.all(videoPromises);
+      });
 
-        const updatedVideos = initialYogaVideos.map((video, index) => ({
-          ...video,
-          videoUrl: videoDataUris[index],
-        }));
+      const videoPromises = initialYogaVideos.map(async (video) => {
+        try {
+          const result = await generateYogaVideo({ prompt: video.prompt });
+          if (result === 'GENERATION_FAILED') {
+            return { ...video, failed: true };
+          }
+          return { ...video, videoUrl: result, failed: false };
+        } catch (error) {
+          console.error(`Failed to generate video for ${video.prompt}:`, error);
+          return { ...video, failed: true };
+        }
+      });
+      
+      const updatedVideos = await Promise.all(videoPromises);
 
+      if (isMounted) {
         setVideos(updatedVideos);
-         toast({
-          title: "Videos Ready!",
-          description: "Your personalized yoga videos have been generated.",
-        });
-      } catch (error) {
-        console.error("Failed to generate videos:", error);
-        toast({
-          title: "Video Generation Failed",
-          description: (error as Error).message || "Could not generate yoga videos. Please try again later.",
-          variant: "destructive",
-        });
-        setGenerationFailed(true);
-        // Keep initial state so the page is still usable
-        setVideos(initialYogaVideos);
-      } finally {
         setIsGenerating(false);
+
+        const hasFailures = updatedVideos.some(v => v.failed);
+        if (hasFailures) {
+            toast({
+                title: "Video Generation Issue",
+                description: "Video generation is a premium feature that requires a billing-enabled account. Some videos could not be loaded.",
+                variant: "destructive",
+            });
+        } else {
+            toast({
+                title: "Videos Ready!",
+                description: "Your personalized yoga videos have been generated.",
+            });
+        }
       }
     };
 
     generateVideos();
+
+    return () => {
+        isMounted = false;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -139,7 +148,7 @@ export default function PatientHomePage() {
                
                 {videos.map((video, index) => (
                     <Card key={index} className="overflow-hidden hover:shadow-xl hover:ring-2 hover:ring-primary/50 transition-all duration-300 h-full flex flex-col">
-                        {isGenerating || generationFailed ? (
+                        {(isGenerating || video.failed || !video.videoUrl) ? (
                             <Skeleton className="w-full h-48" />
                         ) : (
                              <video 

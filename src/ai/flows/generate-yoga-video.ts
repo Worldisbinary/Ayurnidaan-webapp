@@ -15,7 +15,7 @@ const GenerateYogaVideoInputSchema = z.object({
   prompt: z.string().describe('The text prompt for the yoga video.'),
 });
 
-// The output will be a data URI string for the video
+// The output will be a data URI string for the video, or a failure indicator.
 const GenerateYogaVideoOutputSchema = z.string();
 
 export type GenerateYogaVideoInput = z.infer<
@@ -60,43 +60,47 @@ export const generateYogaVideoFlow = ai.defineFlow(
     // Check if the API key is available, which is a proxy for billing being enabled.
     if (!process.env.GEMINI_API_KEY) {
       console.log("Skipping video generation as billing is not enabled.");
-      throw new Error("Video generation requires a billing-enabled Google Cloud project. Please provide an API key.");
+      // Return a specific failure code that the frontend can handle.
+      return "GENERATION_FAILED";
     }
 
-    let {operation} = await ai.generate({
-      model: googleAI.model('veo-2.0-generate-001'),
-      prompt: `An animated, minimalist instructional video of the yoga pose: ${prompt}. Clean, white background.`,
-      config: {
-        durationSeconds: 5,
-        aspectRatio: '16:9',
-      },
-    });
+    try {
+      let {operation} = await ai.generate({
+        model: googleAI.model('veo-2.0-generate-001'),
+        prompt: `An animated, minimalist instructional video of the yoga pose: ${prompt}. Clean, white background.`,
+        config: {
+          durationSeconds: 5,
+          aspectRatio: '16:9',
+        },
+      });
 
-    if (!operation) {
-      throw new Error('Expected the model to return an operation');
+      if (!operation) {
+        throw new Error('Expected the model to return an operation');
+      }
+
+      // Wait until the operation completes. This may take up to a minute.
+      while (!operation.done) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        operation = await ai.checkOperation(operation);
+      }
+
+      if (operation.error) {
+        throw new Error('failed to generate video: ' + operation.error.message);
+      }
+
+      const video = operation.output?.message?.content.find(p => !!p.media);
+      if (!video) {
+        throw new Error('Failed to find the generated video');
+      }
+
+      const videoBase64 = await downloadVideo(video);
+
+      // Return as a data URI
+      return `data:video/mp4;base64,${videoBase64}`;
+    } catch (error) {
+        console.error(`Video generation failed for prompt "${prompt}":`, error);
+        return "GENERATION_FAILED";
     }
-
-    // Wait until the operation completes. This may take up to a minute.
-    // In a real app, you would likely do this in a background job
-    // and notify the user when it's ready.
-    while (!operation.done) {
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      operation = await ai.checkOperation(operation);
-    }
-
-    if (operation.error) {
-      throw new Error('failed to generate video: ' + operation.error.message);
-    }
-
-    const video = operation.output?.message?.content.find(p => !!p.media);
-    if (!video) {
-      throw new Error('Failed to find the generated video');
-    }
-
-    const videoBase64 = await downloadVideo(video);
-
-    // Return as a data URI
-    return `data:video/mp4;base64,${videoBase64}`;
   }
 );
 
