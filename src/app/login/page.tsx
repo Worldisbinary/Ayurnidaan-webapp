@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Leaf, User, KeyRound, Loader2, Stethoscope, Briefcase } from 'lucide-react';
+import { Leaf, User, KeyRound, Loader2, Stethoscope, Briefcase, UserCheck } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
 import { 
@@ -16,10 +16,10 @@ import {
   onAuthStateChanged, 
   RecaptchaVerifier,
   signInWithPhoneNumber,
-  ConfirmationResult
+  ConfirmationResult,
+  signInAnonymously
 } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,6 +38,7 @@ export default function UnifiedLoginPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isPhoneLoading, setIsPhoneLoading] = useState(false);
+  const [isGuestLoading, setIsGuestLoading] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
 
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -95,6 +96,22 @@ export default function UnifiedLoginPage() {
       });
     } finally {
       setIsGoogleLoading(false);
+    }
+  }
+
+  const handleGuestLogin = async () => {
+    setIsGuestLoading(true);
+    try {
+      await signInAnonymously(auth);
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        title: "Login Failed",
+        description: error.message || "An unexpected error occurred with Guest Sign-In.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGuestLoading(false);
     }
   }
   
@@ -182,7 +199,7 @@ export default function UnifiedLoginPage() {
             <h1 className="text-4xl font-headline font-bold">Ayurnidaan</h1>
           </div>
           <CardTitle className="text-2xl font-headline">Welcome</CardTitle>
-          <CardDescription>Sign in to continue to your dashboard.</CardDescription>
+          <CardDescription>Sign in or continue as a guest.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
             {!confirmationResult ? (
@@ -234,15 +251,25 @@ export default function UnifiedLoginPage() {
                 <span className="bg-card px-2 text-muted-foreground">Or</span>
                 </div>
             </div>
-            
-            <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading} className="w-full">
-            {isGoogleLoading ? (
-                <Loader2 className="mr-2 animate-spin" />
-            ) : (
-                <FcGoogle className="mr-2" />
-            )}
-            Sign in with Google
-            </Button>
+
+            <div className="space-y-2">
+                <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading || isGuestLoading} className="w-full">
+                {isGoogleLoading ? (
+                    <Loader2 className="mr-2 animate-spin" />
+                ) : (
+                    <FcGoogle className="mr-2" />
+                )}
+                Sign in with Google
+                </Button>
+                <Button variant="secondary" onClick={handleGuestLogin} disabled={isGuestLoading || isGoogleLoading || isPhoneLoading} className="w-full">
+                {isGuestLoading ? (
+                    <Loader2 className="mr-2 animate-spin" />
+                ) : (
+                    <UserCheck className="mr-2" />
+                )}
+                Continue as Guest
+                </Button>
+            </div>
         </CardContent>
       </Card>
        <footer className="text-center py-4 text-muted-foreground text-sm mt-8">

@@ -2,7 +2,7 @@
 'use client';
 
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 // This is the server-fetched and verified Firebase configuration.
 const firebaseConfig = {
