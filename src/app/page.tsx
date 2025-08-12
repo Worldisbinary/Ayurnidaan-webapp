@@ -15,7 +15,7 @@ export default function SplashScreen() {
     }, 1500); // Splash screen visible for 1.5 seconds
 
     const redirectTimer = setTimeout(() => {
-      router.push('/role-selection'); // Redirect to the new role selection page
+      router.push('/login'); // Redirect to the new unified login page
     }, 2000); // Redirect after fade out
 
     return () => {

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Leaf, User, Phone, KeyRound, Loader2 } from 'lucide-react';
+import { Leaf, User, Phone, KeyRound, Loader2, Stethoscope } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { auth } from '@/lib/firebase';
 import { 
@@ -19,8 +19,10 @@ import {
   ConfirmationResult
 } from 'firebase/auth';
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export default function LoginPage() {
+
+export default function UnifiedLoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   
@@ -46,16 +48,13 @@ export default function LoginPage() {
   }, [router, toast]);
 
   const setupRecaptcha = () => {
-    // Check if the verifier already exists to avoid re-rendering
     if (!(window as any).recaptchaVerifier) {
       (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
         'size': 'invisible',
-        'callback': (response: any) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        'callback': () => {
           console.log("reCAPTCHA solved");
         },
         'expired-callback': () => {
-            // Response expired. Ask user to solve reCAPTCHA again.
             toast({ title: "reCAPTCHA Expired", description: "Please try sending the OTP again.", variant: "destructive" });
         }
       });
@@ -67,7 +66,6 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // The onAuthStateChanged listener will handle the redirect
     } catch (error: any) {
       console.error(error);
       toast({
@@ -112,7 +110,6 @@ export default function LoginPage() {
     setIsPhoneLoading(true);
     try {
         await confirmationResult.confirm(otp);
-        // onAuthStateChanged will handle successful login
     } catch (error: any) {
         console.error(error);
         toast({ title: "OTP Verification Failed", description: error.message, variant: "destructive" });
@@ -135,7 +132,7 @@ export default function LoginPage() {
                 </h1>
             </div>
             <p className="text-muted-foreground mt-4 text-center">
-                Checking authentication status...
+                Loading...
             </p>
         </div>
       )
@@ -149,74 +146,93 @@ export default function LoginPage() {
             <Leaf className="w-10 h-10 text-primary" />
             <h1 className="text-4xl font-headline font-bold">Ayurnidaan</h1>
           </div>
-          <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>
-          <CardDescription>Choose a sign-in method to continue.</CardDescription>
+          <CardTitle className="text-2xl font-headline">Welcome</CardTitle>
+          <CardDescription>Please select your role to continue.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-            <Button variant="outline" onClick={handleGuestLogin} className="w-full">
-                <User className="mr-2" />
-                Continue as Guest
-            </Button>
-            
-            <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or sign in with</span>
-                </div>
-            </div>
-
-            {!confirmationResult ? (
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number</Label>
-                        <div className="flex gap-2">
-                            <Input 
-                                id="phone" 
-                                type="tel" 
-                                placeholder="+91 12345 67890" 
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                disabled={isPhoneLoading}
-                            />
-                            <Button onClick={handleSendOtp} disabled={isPhoneLoading}>
-                                {isPhoneLoading ? <Loader2 className="animate-spin"/> : "Send OTP"}
-                            </Button>
+        <CardContent>
+            <Tabs defaultValue="doctor" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="doctor"><Stethoscope className="mr-2"/> Doctor</TabsTrigger>
+                    <TabsTrigger value="patient"><User className="mr-2"/> Patient</TabsTrigger>
+                </TabsList>
+                <TabsContent value="doctor" className="pt-6 space-y-6">
+                    <Button variant="outline" onClick={handleGuestLogin} className="w-full">
+                        <User className="mr-2" />
+                        Continue as Guest
+                    </Button>
+                    
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-card px-2 text-muted-foreground">Or sign in with</span>
                         </div>
                     </div>
-                </div>
-            ) : (
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="otp">Enter OTP</Label>
-                        <Input 
-                            id="otp" 
-                            type="text" 
-                            placeholder="123456"
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value)} 
-                            disabled={isPhoneLoading}
-                        />
-                    </div>
-                    <Button onClick={handleVerifyOtp} className="w-full" disabled={isPhoneLoading}>
-                        {isPhoneLoading ? <Loader2 className="mr-2 animate-spin" /> : <KeyRound className="mr-2" />}
-                        Verify OTP & Sign In
-                    </Button>
-                </div>
-            )}
-            
-            <div id="recaptcha-container"></div>
-            
-            <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading} className="w-full">
-            {isGoogleLoading ? (
-                <Loader2 className="mr-2 animate-spin" />
-            ) : (
-                <FcGoogle className="mr-2" />
-            )}
-            Google
-            </Button>
 
+                    {!confirmationResult ? (
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="phone">Phone Number</Label>
+                                <div className="flex gap-2">
+                                    <Input 
+                                        id="phone" 
+                                        type="tel" 
+                                        placeholder="+91 12345 67890" 
+                                        value={phoneNumber}
+                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                        disabled={isPhoneLoading}
+                                    />
+                                    <Button onClick={handleSendOtp} disabled={isPhoneLoading}>
+                                        {isPhoneLoading ? <Loader2 className="animate-spin"/> : "Send OTP"}
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="otp">Enter OTP</Label>
+                                <Input 
+                                    id="otp" 
+                                    type="text" 
+                                    placeholder="123456"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value)} 
+                                    disabled={isPhoneLoading}
+                                />
+                            </div>
+                            <Button onClick={handleVerifyOtp} className="w-full" disabled={isPhoneLoading}>
+                                {isPhoneLoading ? <Loader2 className="mr-2 animate-spin" /> : <KeyRound className="mr-2" />}
+                                Verify OTP & Sign In
+                            </Button>
+                        </div>
+                    )}
+                    
+                    <div id="recaptcha-container"></div>
+                    
+                    <Button variant="outline" onClick={handleGoogleLogin} disabled={isGoogleLoading} className="w-full">
+                    {isGoogleLoading ? (
+                        <Loader2 className="mr-2 animate-spin" />
+                    ) : (
+                        <FcGoogle className="mr-2" />
+                    )}
+                    Google
+                    </Button>
+                </TabsContent>
+                <TabsContent value="patient" className="pt-6">
+                    <div className="text-center text-muted-foreground p-4">
+                        <p>Continue to the patient dashboard to explore wellness resources.</p>
+                    </div>
+                     <Button
+                        variant="default"
+                        className="w-full h-16 text-lg"
+                        onClick={() => router.push('/patient/home')}
+                    >
+                        <User className="mr-4 h-6 w-6" /> Continue as a Patient
+                    </Button>
+                </TabsContent>
+            </Tabs>
         </CardContent>
       </Card>
        <footer className="text-center py-4 text-muted-foreground text-sm mt-8">
