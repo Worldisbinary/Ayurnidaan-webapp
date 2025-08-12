@@ -56,6 +56,13 @@ export const generateYogaVideoFlow = ai.defineFlow(
     outputSchema: GenerateYogaVideoOutputSchema,
   },
   async ({prompt}) => {
+    
+    // Check if the API key is available, which is a proxy for billing being enabled.
+    if (!process.env.GEMINI_API_KEY) {
+      console.log("Skipping video generation as billing is not enabled.");
+      throw new Error("Video generation requires a billing-enabled Google Cloud project. Please provide an API key.");
+    }
+
     let {operation} = await ai.generate({
       model: googleAI.model('veo-2.0-generate-001'),
       prompt: `An animated, minimalist instructional video of the yoga pose: ${prompt}. Clean, white background.`,

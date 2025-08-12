@@ -46,11 +46,13 @@ export default function PatientHomePage() {
   const router = useRouter();
   const { toast } = useToast();
   const [videos, setVideos] = useState<YogaVideo[]>(initialYogaVideos);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(true); // Manages the video generation process
+  const [generationFailed, setGenerationFailed] = useState(false);
 
   useEffect(() => {
     const generateVideos = async () => {
-      setIsLoading(true);
+      setIsGenerating(true);
+      setGenerationFailed(false);
        toast({
           title: "Generating Yoga Videos...",
           description: "This may take a minute or two. Please be patient.",
@@ -78,10 +80,11 @@ export default function PatientHomePage() {
           description: (error as Error).message || "Could not generate yoga videos. Please try again later.",
           variant: "destructive",
         });
+        setGenerationFailed(true);
         // Keep initial state so the page is still usable
         setVideos(initialYogaVideos);
       } finally {
-        setIsLoading(false);
+        setIsGenerating(false);
       }
     };
 
@@ -124,7 +127,7 @@ export default function PatientHomePage() {
                 <Video className="w-8 h-8 text-primary"/>
                 Yoga & Wellness
             </h2>
-             {isLoading && (
+             {isGenerating && (
                  <div className="text-center p-4 bg-muted rounded-lg">
                     <Loader2 className="w-8 h-8 mx-auto animate-spin text-primary mb-2" />
                     <p className="text-muted-foreground">Our AI is generating your animated yoga videos...</p>
@@ -133,9 +136,9 @@ export default function PatientHomePage() {
             )}
             <div className="grid gap-6 md:grid-cols-2 mt-4">
                
-                {(isLoading ? Array.from({ length: 4 }) : videos).map((video, index) => (
+                {videos.map((video, index) => (
                     <Card key={index} className="overflow-hidden hover:shadow-xl hover:ring-2 hover:ring-primary/50 transition-all duration-300 h-full flex flex-col">
-                        {isLoading || !video.videoUrl ? (
+                        {isGenerating || generationFailed ? (
                             <Skeleton className="w-full h-48" />
                         ) : (
                              <video 
@@ -147,10 +150,10 @@ export default function PatientHomePage() {
                             </video>
                         )}
                         <CardHeader>
-                           {isLoading ? <Skeleton className="h-6 w-3/4" /> : <CardTitle>{video.title}</CardTitle>}
+                           {isGenerating ? <Skeleton className="h-6 w-3/4" /> : <CardTitle>{video.title}</CardTitle>}
                         </CardHeader>
                         <CardContent className="flex-grow">
-                             {isLoading ? (
+                             {isGenerating ? (
                                 <div className="space-y-2">
                                     <Skeleton className="h-4 w-full" />
                                     <Skeleton className="h-4 w-5/6" />
