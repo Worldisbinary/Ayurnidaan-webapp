@@ -5,6 +5,8 @@ import { suggestDiagnoses, type SuggestDiagnosesInput } from '@/ai/flows/suggest
 import { fetchArticles as fetchArticlesFlow, type Article } from '@/ai/flows/fetch-articles';
 import { chat, type ChatHistory } from '@/ai/flows/chat-flow';
 import { getDosha as getDoshaFlow } from '@/ai/flows/get-dosha';
+import { generateYogaVideo as generateYogaVideoFlow } from '@/ai/flows/generate-yoga-video';
+import type { GenerateYogaVideoInput } from '@/ai/flows/generate-yoga-video';
 import type { GetDoshaInput, GetDoshaOutput } from '@/ai/schemas/dosha-schema';
 import Razorpay from 'razorpay';
 import { randomUUID } from 'crypto';
@@ -67,4 +69,12 @@ export async function createRazorpayOrder({ amount }: { amount: number }) {
     console.error('RAZORPAY ERROR', error);
     throw new Error('Failed to create Razorpay order');
   }
+}
+
+export async function generateYogaVideo(input: GenerateYogaVideoInput): Promise<string> {
+    const videoDataUri = await generateYogaVideoFlow(input);
+    if (!videoDataUri) {
+        throw new Error('The AI failed to generate a video.');
+    }
+    return videoDataUri;
 }
