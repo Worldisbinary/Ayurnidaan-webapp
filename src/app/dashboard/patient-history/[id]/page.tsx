@@ -47,7 +47,7 @@ export default function PatientDetailPage() {
   const [diagnosisResult, setDiagnosisResult] = useState<SuggestDiagnosesOutput | null>(null);
   const router = useRouter();
   const params = useParams();
-  const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const id = params.id as string;
   const { toast } = useToast();
 
   useEffect(() => {

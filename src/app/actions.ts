@@ -1,9 +1,9 @@
 
 'use server';
 
-import { suggestDiagnoses, type SuggestDiagnosesInput } from '@/ai/flows/suggest-diagnoses';
+import { suggestDiagnoses, type SuggestDiagnosesInput, type SuggestDiagnosesOutput } from '@/ai/flows/suggest-diagnoses';
 import { fetchArticles as fetchArticlesFlow, type Article } from '@/ai/flows/fetch-articles';
-import { chat, type ChatHistory } from '@/ai/flows/chat-flow';
+import { continueConversation as chatFlow, type ChatHistory } from '@/ai/flows/chat-flow';
 import { getDosha as getDoshaFlow } from '@/ai/flows/get-dosha';
 import { generateYogaVideo as generateYogaVideoFlow } from '@/ai/flows/generate-yoga-video';
 import type { GenerateYogaVideoInput } from '@/ai/flows/generate-yoga-video';
@@ -11,14 +11,21 @@ import type { GetDoshaInput, GetDoshaOutput } from '@/ai/schemas/dosha-schema';
 import Razorpay from 'razorpay';
 import { randomUUID } from 'crypto';
 
-export async function getDiagnosis(input: SuggestDiagnosesInput): Promise<any> {
-  // By removing the try/catch, the original error from the AI flow will be
-  // propagated to the client, giving us a more specific error message.
-  const result = await suggestDiagnoses(input);
-  if (!result) {
-      throw new Error('The AI returned an empty response.');
+export async function getDiagnosis(input: SuggestDiagnosesInput): Promise<SuggestDiagnosesOutput> {
+  try {
+    const result = await suggestDiagnoses(input);
+    if (!result) {
+        throw new Error('The AI returned an empty response.');
+    }
+    return result;
+  } catch(error) {
+    console.error("Error in getDiagnosis action:", error);
+    // Re-throw the error to be caught by the client-side component
+    if (error instanceof Error) {
+        throw new Error(`AI Diagnosis Failed: ${error.message}`);
+    }
+    throw new Error('An unknown error occurred during AI diagnosis.');
   }
-  return result;
 }
 
 export async function fetchArticles(): Promise<Article[]> {
@@ -27,7 +34,7 @@ export async function fetchArticles(): Promise<Article[]> {
 }
 
 export async function continueConversation(history: ChatHistory) {
-    const stream = await chat(history);
+    const stream = await chatFlow(history);
     
     // The ReadableStream object is not serializable, so we convert it to a different format.
     // This is a workaround to allow the client to read the stream.
