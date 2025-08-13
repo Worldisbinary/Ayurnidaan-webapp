@@ -34,6 +34,11 @@ const SuggestDiagnosesOutputSchema = z.object({
     .describe(
       'The AI’s reasoning for prioritizing the likely diagnoses based on the entered symptoms. Explain in a comprehensive but easy-to-understand manner.'
     ),
+  doshaPercentages: z.object({
+        vata: z.number().describe('The estimated percentage of Vata dosha, from 0 to 100.'),
+        pitta: z.number().describe('The estimated percentage of Pitta dosha, from 0 to 100.'),
+        kapha: z.number().describe('The estimated percentage of Kapha dosha, from 0 to 100.'),
+    }).describe('The percentage breakdown of the three doshas based on the symptoms. The sum should be close to 100.'),
 });
 export type SuggestDiagnosesOutput = z.infer<typeof SuggestDiagnosesOutputSchema>;
 
@@ -52,6 +57,7 @@ const suggestDiagnosesPrompt = ai.definePrompt({
     1.  **Potential Imbalances:** Identify the most likely Dosha imbalances (e.g., Vata, Pitta, Kapha, or a combination).
     2.  **Possible Diseases:** Suggest potential Ayurvedic disease classifications (e.g., Amlapitta, Grahani).
     3.  **Reasoning:** Provide a clear and concise rationale for your conclusions, linking the symptoms directly to the potential imbalances and diseases.
+    4.  **Dosha Percentages**: Provide an estimated percentage breakdown for Vata, Pitta, and Kapha based on the symptoms.
 
     Your response must be structured according to the output schema.
     `,
@@ -71,7 +77,8 @@ const suggestDiagnosesFlow = ai.defineFlow(
         return {
             potentialImbalances: "Vata-Pitta Imbalance (वात-पित्त असंतुलन)",
             possibleDiseases: "Amlapitta (Acidity/GERD), Grahani (IBS/Malabsorption)",
-            reasoning: "This is a static sample diagnosis. The combination of symptoms like irregular appetite (Kshudha), disturbed sleep (Nidra), and a coated tongue (Saam Jivha) points towards a dual Dosha imbalance. To get a live AI-powered diagnosis, please provide a valid API key for a billing-enabled Google Cloud project in your .env file."
+            reasoning: "This is a static sample diagnosis. The combination of symptoms like irregular appetite (Kshudha), disturbed sleep (Nidra), and a coated tongue (Saam Jivha) points towards a dual Dosha imbalance. To get a live AI-powered diagnosis, please provide a valid API key for a billing-enabled Google Cloud project in your .env file.",
+            doshaPercentages: { vata: 55, pitta: 35, kapha: 10 }
         };
     }
     
@@ -87,7 +94,8 @@ const suggestDiagnosesFlow = ai.defineFlow(
         return {
             potentialImbalances: "Error",
             possibleDiseases: "Could not determine",
-            reasoning: `The AI diagnosis failed. This may be due to a configuration issue or a problem with the AI service. Please ensure your API key is correct and try again. Error details: ${(error as Error).message}`
+            reasoning: `The AI diagnosis failed. This may be due to a configuration issue or a problem with the AI service. Please ensure your API key is correct and try again. Error details: ${(error as Error).message}`,
+            doshaPercentages: { vata: 33, pitta: 34, kapha: 33 }
         };
     }
   }

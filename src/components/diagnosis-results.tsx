@@ -4,7 +4,8 @@
 import type { SuggestDiagnosesOutput } from '@/ai/flows/suggest-diagnoses';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { HeartPulse, Stethoscope, BrainCircuit, Bot } from 'lucide-react';
+import { HeartPulse, Stethoscope, BrainCircuit, Bot, BarChart2 } from 'lucide-react';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface DiagnosisResultsProps {
   result: SuggestDiagnosesOutput | null;
@@ -12,6 +13,12 @@ interface DiagnosisResultsProps {
 }
 
 export function DiagnosisResults({ result, isLoading }: DiagnosisResultsProps) {
+  const chartData = result?.doshaPercentages ? [
+        { name: 'Vata', value: result.doshaPercentages.vata, fill: 'var(--color-vata)' },
+        { name: 'Pitta', value: result.doshaPercentages.pitta, fill: 'var(--color-pitta)' },
+        { name: 'Kapha', value: result.doshaPercentages.kapha, fill: 'var(--color-kapha)' },
+    ] : [];
+
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -59,6 +66,13 @@ export function DiagnosisResults({ result, isLoading }: DiagnosisResultsProps) {
 
   return (
     <div className="space-y-8">
+       <style jsx global>{`
+          :root {
+            --color-vata: hsl(var(--chart-1));
+            --color-pitta: hsl(var(--chart-2));
+            --color-kapha: hsl(var(--chart-4));
+          }
+        `}</style>
       <Card className="shadow-lg bg-accent/30 border-accent">
         <CardHeader className="flex-row items-center gap-4 space-y-0">
           <HeartPulse className="w-8 h-8 text-accent-foreground" />
@@ -68,6 +82,38 @@ export function DiagnosisResults({ result, isLoading }: DiagnosisResultsProps) {
           <p className="text-lg">{result.potentialImbalances}</p>
         </CardContent>
       </Card>
+
+      {result.doshaPercentages && (
+         <Card className="shadow-lg">
+            <CardHeader className="flex-row items-center gap-4 space-y-0">
+                <BarChart2 className="w-8 h-8 text-primary" />
+                <CardTitle className="text-xl font-headline">Dosha Composition</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6 h-60">
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData} layout="vertical" margin={{ left: 10 }}>
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                        <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+                        <YAxis type="category" dataKey="name" width={60} stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                        <Tooltip
+                            cursor={{ fill: 'transparent' }}
+                            content={({ active, payload }) => {
+                                if (active && payload && payload.length) {
+                                    return (
+                                        <div className="rounded-lg border bg-background p-2 shadow-sm">
+                                            <p className="text-sm font-bold">{`${payload[0].payload.name}: ${payload[0].value}%`}</p>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            }}
+                        />
+                        <Bar dataKey="value" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                </ResponsiveContainer>
+            </CardContent>
+        </Card>
+      )}
 
       <Card className="shadow-lg bg-secondary">
         <CardHeader className="flex-row items-center gap-4 space-y-0">
@@ -82,7 +128,7 @@ export function DiagnosisResults({ result, isLoading }: DiagnosisResultsProps) {
       <Card className="shadow-lg">
         <CardHeader className="flex-row items-center gap-4 space-y-0">
           <BrainCircuit className="w-8 h-8 text-primary" />
-          <CardTitle className="text-2xl font-headline text-primary-foreground">AI Reasoning</CardTitle>
+          <CardTitle className="text-2xl font-headline">AI Reasoning</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-base leading-relaxed">{result.reasoning}</p>
