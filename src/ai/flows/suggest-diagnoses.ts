@@ -32,7 +32,7 @@ const SuggestDiagnosesOutputSchema = z.object({
   reasoning: z
     .string()
     .describe(
-      'The AI’s reasoning for prioritizing the likely diagnoses based on the entered symptoms. Explain in a comprehensive but easy-to-understand manner.'
+      'The AI’s reasoning for prioritizing the likely diagnoses based on the entered symptoms. Explain in a comprehensive but easy-to-understand manner. This reasoning must be in Hindi.'
     ),
   doshaPercentages: z.object({
         vata: z.number().describe('The estimated percentage of Vata dosha, from 0 to 100.'),
@@ -56,7 +56,7 @@ const suggestDiagnosesPrompt = ai.definePrompt({
     Based on your analysis, provide the following:
     1.  **Potential Imbalances:** Identify the most likely Dosha imbalances (e.g., Vata, Pitta, Kapha, or a combination).
     2.  **Possible Diseases:** Suggest potential Ayurvedic disease classifications (e.g., Amlapitta, Grahani).
-    3.  **Reasoning:** Provide a clear and concise rationale for your conclusions, linking the symptoms directly to the potential imbalances and diseases.
+    3.  **Reasoning:** Provide a clear and concise rationale for your conclusions, linking the symptoms directly to the potential imbalances and diseases. This reasoning must be provided in Hindi.
     4.  **Dosha Percentages**: Provide an estimated percentage breakdown for Vata, Pitta, and Kapha based on the symptoms.
 
     Your response must be structured according to the output schema.
@@ -77,7 +77,7 @@ const suggestDiagnosesFlow = ai.defineFlow(
         return {
             potentialImbalances: "Vata-Pitta Imbalance (वात-पित्त असंतुलन)",
             possibleDiseases: "Amlapitta (Acidity/GERD), Grahani (IBS/Malabsorption)",
-            reasoning: "This is a static sample diagnosis. The combination of symptoms like irregular appetite (Kshudha), disturbed sleep (Nidra), and a coated tongue (Saam Jivha) points towards a dual Dosha imbalance. To get a live AI-powered diagnosis, please provide a valid API key for a billing-enabled Google Cloud project in your .env file.",
+            reasoning: "यह एक स्थिर नमूना निदान है। अनियमित भूख (क्षुधा), परेशान नींद (निद्रा), और एक लेपित जीभ (साम जिह्वा) जैसे लक्षणों का संयोजन दोहरे दोष असंतुलन की ओर इशारा करता है। लाइव एआई-संचालित निदान प्राप्त करने के लिए, कृपया अपनी .env फ़ाइल में बिलिंग-सक्षम Google क्लाउड प्रोजेक्ट के लिए एक वैध एपीआई कुंजी प्रदान करें।",
             doshaPercentages: { vata: 55, pitta: 35, kapha: 10 }
         };
     }
@@ -94,7 +94,7 @@ const suggestDiagnosesFlow = ai.defineFlow(
         return {
             potentialImbalances: "Error",
             possibleDiseases: "Could not determine",
-            reasoning: `The AI diagnosis failed. This may be due to a configuration issue or a problem with the AI service. Please ensure your API key is correct and try again. Error details: ${(error as Error).message}`,
+            reasoning: `एआई निदान विफल हो गया। यह एक कॉन्फ़िगरेशन समस्या या एआई सेवा के साथ एक समस्या के कारण हो सकता है। कृपया सुनिश्चित करें कि आपकी एपीआई कुंजी सही है और पुनः प्रयास करें। त्रुटि विवरण: ${(error as Error).message}`,
             doshaPercentages: { vata: 33, pitta: 34, kapha: 33 }
         };
     }
