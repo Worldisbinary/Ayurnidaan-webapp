@@ -22,11 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Sparkles, Bot, Stethoscope, HeartPulse, BrainCircuit, Leaf } from 'lucide-react';
+import { Loader2, Sparkles, Bot, Stethoscope, HeartPulse, BrainCircuit, Leaf, BarChart2 } from 'lucide-react';
 import { getDosha, type GetDoshaOutput } from '@/app/actions';
 import { GetDoshaInputSchema } from '@/ai/schemas/dosha-schema';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 type GetDoshaFormValues = z.infer<typeof GetDoshaInputSchema>;
 
@@ -79,8 +80,21 @@ export default function CheckupPage() {
         { name: "energyLevels", label: "Energy Levels (ऊर्जा का स्तर)", options: ["Comes in bursts, variable (अचानक ऊर्जा आना, परिवर्तनशील)", "Consistent, high output (लगातार, उच्च उत्पादन)", "Steady, slow to start (स्थिर, शुरू करने में धीमा)"] },
     ] as const;
 
+    const chartData = result ? [
+        { name: 'Vata', value: result.doshaPercentages.vata, fill: 'var(--color-vata)' },
+        { name: 'Pitta', value: result.doshaPercentages.pitta, fill: 'var(--color-pitta)' },
+        { name: 'Kapha', value: result.doshaPercentages.kapha, fill: 'var(--color-kapha)' },
+    ] : [];
+
     return (
         <div className="space-y-8">
+            <style jsx global>{`
+              :root {
+                --color-vata: hsl(var(--chart-1));
+                --color-pitta: hsl(var(--chart-2));
+                --color-kapha: hsl(var(--chart-4));
+              }
+            `}</style>
             <Card className="bg-primary/10 border-primary/30 text-center p-8">
                 <CardTitle className="text-3xl font-headline mb-2 flex items-center justify-center gap-2">
                     <Stethoscope className="w-8 h-8"/> AI-Powered Dosha Check-up
@@ -93,7 +107,7 @@ export default function CheckupPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <CardTitle>Your Prakriti Questionnaire</CardTitle>
+                        <CardTitle>Your Prakriti Questionnaire (प्रकृति प्रश्नावली)</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
@@ -109,7 +123,7 @@ export default function CheckupPage() {
                                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                     <FormControl>
                                                         <SelectTrigger>
-                                                            <SelectValue placeholder="Select the best description" />
+                                                            <SelectValue placeholder="Select the best description (सबसे अच्छा विवरण चुनें)" />
                                                         </SelectTrigger>
                                                     </FormControl>
                                                     <SelectContent>
@@ -125,12 +139,12 @@ export default function CheckupPage() {
                                      {isLoading ? (
                                         <>
                                         <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                                        Analyzing...
+                                        Analyzing... (विश्लेषण हो रहा है...)
                                         </>
                                     ) : (
                                         <>
                                         <Sparkles className="mr-2" />
-                                        Find My Dosha
+                                        Find My Dosha (मेरा दोष खोजें)
                                         </>
                                     )}
                                 </Button>
@@ -147,6 +161,7 @@ export default function CheckupPage() {
                             <CardContent className="space-y-4 pt-6">
                                 <Skeleton className="h-4 w-full" />
                                 <Skeleton className="h-4 w-5/6" />
+                                <Skeleton className="h-40 w-full" />
                                 <Skeleton className="h-4 w-full" />
                                 <Skeleton className="h-4 w-2/3" />
                                 <Skeleton className="h-4 w-full" />
@@ -171,6 +186,37 @@ export default function CheckupPage() {
                                 <p className="text-3xl font-bold text-accent-foreground">{result.dosha}</p>
                                 </CardContent>
                             </Card>
+
+                            <Card className="shadow-lg">
+                                <CardHeader className="flex-row items-center gap-4 space-y-0">
+                                    <BarChart2 className="w-8 h-8 text-primary" />
+                                    <CardTitle className="text-xl font-headline">Dosha Composition</CardTitle>
+                                </CardHeader>
+                                <CardContent className="pt-6 h-60">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={chartData} layout="vertical" margin={{ left: 10 }}>
+                                            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                                            <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+                                            <YAxis type="category" dataKey="name" width={60} stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                                            <Tooltip
+                                                cursor={{ fill: 'transparent' }}
+                                                content={({ active, payload }) => {
+                                                    if (active && payload && payload.length) {
+                                                        return (
+                                                            <div className="rounded-lg border bg-background p-2 shadow-sm">
+                                                                <p className="text-sm font-bold">{`${payload[0].payload.name}: ${payload[0].value}%`}</p>
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return null;
+                                                }}
+                                            />
+                                            <Bar dataKey="value" radius={[0, 4, 4, 0]} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </CardContent>
+                            </Card>
+
                             <Card className="shadow-lg">
                                 <CardHeader className="flex-row items-center gap-4 space-y-0">
                                 <BrainCircuit className="w-8 h-8 text-primary" />
