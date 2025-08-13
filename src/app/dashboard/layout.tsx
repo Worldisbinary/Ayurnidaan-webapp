@@ -25,7 +25,7 @@ import {
   User,
   Bot,
 } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -175,6 +175,9 @@ export default function DashboardLayout({
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
+              <SheetHeader>
+                <SheetTitle className="sr-only">Main Menu</SheetTitle>
+              </SheetHeader>
               <nav className="grid gap-2 text-lg font-medium">
                  <Link
                     href="/dashboard"

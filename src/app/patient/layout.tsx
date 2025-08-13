@@ -11,7 +11,7 @@ import {
   HeartPulse,
   LogOut
 } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase';
@@ -78,6 +78,9 @@ export default function PatientLayout({
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col">
+            <SheetHeader>
+                <SheetTitle className="sr-only">Main Menu</SheetTitle>
+            </SheetHeader>
             <nav className="grid gap-2 text-lg font-medium">
                <Link
                   href="/patient/home"
