@@ -3,7 +3,8 @@
 
 import { suggestDiagnoses, type SuggestDiagnosesInput, type SuggestDiagnosesOutput } from '@/ai/flows/suggest-diagnoses';
 import { fetchArticles as fetchArticlesFlow, type Article } from '@/ai/flows/fetch-articles';
-import { continueConversation as chatFlow, type ChatHistory } from '@/ai/flows/chat-flow';
+import { continueConversation as chatFlow } from '@/ai/flows/chat-flow';
+import type { ChatHistory } from '@/ai/schemas/chat-schema';
 import { getDosha as getDoshaFlow } from '@/ai/flows/get-dosha';
 import { generateYogaVideo as generateYogaVideoFlow } from '@/ai/flows/generate-yoga-video';
 import type { GenerateYogaVideoInput } from '@/ai/flows/generate-yoga-video';

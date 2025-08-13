@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import { continueConversation } from '@/app/actions';
-import type { ChatHistory } from '@/ai/flows/chat-flow';
+import type { ChatHistory } from '@/ai/schemas/chat-schema';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
