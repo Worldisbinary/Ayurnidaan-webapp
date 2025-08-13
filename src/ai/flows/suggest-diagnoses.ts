@@ -92,7 +92,7 @@ const suggestDiagnosesFlow = ai.defineFlow(
         console.error("Error during AI diagnosis:", error);
         // Fallback to a static error response if the AI call fails
         return {
-            potentialImbalances: "Error",
+            potentialImbalances: "AI Diagnosis Failed",
             possibleDiseases: "Could not determine",
             reasoning: `एआई निदान विफल हो गया। यह एक कॉन्फ़िगरेशन समस्या या एआई सेवा के साथ एक समस्या के कारण हो सकता है। कृपया सुनिश्चित करें कि आपकी एपीआई कुंजी सही है और पुनः प्रयास करें। त्रुटि विवरण: ${(error as Error).message}`,
             doshaPercentages: { vata: 33, pitta: 34, kapha: 33 }
